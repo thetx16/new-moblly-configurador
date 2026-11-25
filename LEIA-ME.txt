@@ -1,0 +1,10 @@
+NEW MOBLLY — APRESENTAÇÃO V05
+
+1. Extraia todos os arquivos do ZIP na mesma pasta.
+2. Abra index.html no Chrome ou Edge.
+3. O configurador também pode ser aberto separadamente em configurador.html.
+4. Links externos exigem internet.
+5. Curadoria: Tripo Professional é a única nova assinatura recomendada; a infraestrutura comercial existente precisa ser confirmada.
+6. O progresso pode ser salvo localmente e exportado.
+7. Modelos 3D ilustrativos, não produtos finais.
+8. Em Personalizar ambiente, ajuste largura, comprimento, área, altura das paredes, cores, piso, janela e decoração. As plantas são retangulares ilustrativas; não há colisões entre móveis.
