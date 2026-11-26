@@ -360,6 +360,31 @@ body.lp-navigation-leaving main,body.lp-navigation-leaving .lp-footer{opacity:0;
 @media(max-width:1050px){.lp-catalog-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.lp-gallery{grid-auto-columns:calc((100% - 18px)/2)}}
 @media(max-width:768px){.lp-section{padding:58px 20px}.lp-heading{margin-bottom:28px}.lp-heading h2,.lp-final h2{font-size:clamp(28px,7.7vw,38px)}.lp-kicker{font-size:10px!important}.lp-catalog-grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.lp-product-card{padding:12px}.lp-product-image{height:130px}.lp-product-caption h3{font-size:13px}.lp-product-caption p{font-size:10px}.lp-product-action{font-size:9px}.lp-gallery-toolbar{flex-wrap:wrap;gap:12px}.lp-filters{gap:6px}.lp-filters button{font-size:10px;padding:8px 12px}.lp-gallery-nav{margin-left:auto}.lp-gallery{grid-auto-columns:85%;gap:12px}.lp-project-info{padding:16px}.lp-reviews-grid{grid-auto-flow:column;grid-auto-columns:88%;grid-template-columns:none;overflow-x:auto;scroll-snap-type:x mandatory;gap:12px;padding:4px 2px 16px;scrollbar-width:thin}.lp-review{scroll-snap-align:start;padding:20px}.lp-review blockquote{font-size:13px}.lp-final-grid{grid-template-columns:1fr}.lp-final-art{min-height:230px;grid-row:1}.lp-final-art img{max-height:250px}.lp-final-copy{text-align:center}.lp-final h2{text-wrap:balance}.lp-final-form .lp-cta,.lp-final-copy .lp-outline{width:100%}.lp-footer-inner{flex-direction:column;gap:18px}.lp-footer nav{gap:14px}.lp-cta{font-size:11px;padding:14px 12px}}
 @media(prefers-reduced-motion:reduce){.lp-section [data-lp-reveal],.lp-spot,.lp-cta,.lp-cta::before,.lp-cta::after,.lp-product-image img{animation:none!important;transition:none!important;opacity:1!important;transform:none!important;filter:none!important}}
+
+/* V26 — portfólio sticky com rolagem horizontal vinculada ao scroll vertical */
+.lp-portfolio-pin{position:relative}
+.lp-portfolio.lp-pin-ready{padding-block:0;overflow:visible;overflow-anchor:none;height:calc(var(--lp-pin-vh,100vh) + var(--lp-pin-travel,0px))}
+.lp-pin-ready .lp-portfolio-pin{position:sticky;top:0;height:var(--lp-pin-vh,100vh);display:grid;align-items:center;min-width:0}
+.lp-pin-ready .lp-portfolio-pin>.lp-wrap{min-width:0;width:100%;padding-block:14px}
+.lp-pin-ready .lp-heading{margin-bottom:clamp(20px,3.2vh,38px)}
+.lp-pin-ready .lp-gallery{overflow-x:hidden;scroll-snap-type:none;scroll-behavior:auto;scrollbar-width:none;padding-bottom:12px}
+.lp-pin-ready .lp-gallery::-webkit-scrollbar{display:none}
+.lp-pin-ready .lp-center{margin-top:clamp(20px,3.2vh,38px)}
+.lp-scroll-progress{display:none}
+.lp-pin-ready .lp-scroll-progress{display:flex;align-items:center;gap:12px;margin:4px 2px 0}
+.lp-scroll-track{height:4px;flex:1;min-width:0;overflow:hidden;border-radius:20px;background:#f4e8df}
+.lp-scroll-track>span{display:block;height:100%;width:100%;background:var(--nm-red);border-radius:20px;transform:scaleX(var(--lp-scroll-progress,0));transform-origin:left center}
+.lp-scroll-hint{font-size:10px;color:var(--nm-muted);font-weight:600;white-space:nowrap}
+@media(min-width:769px) and (max-height:850px){
+ .lp-pin-ready .lp-heading h2{font-size:clamp(30px,3.5vw,43px);margin-bottom:10px}
+ .lp-pin-ready .lp-heading>p:not(.lp-kicker){font-size:14px;line-height:1.55}
+ .lp-pin-ready .lp-kicker{margin-bottom:9px!important}
+ .lp-pin-ready .lp-gallery-toolbar{margin-bottom:12px}
+ .lp-pin-ready .lp-project-media{max-height:clamp(150px,28vh,240px)}
+ .lp-pin-ready .lp-project-info{padding:14px 18px}
+ .lp-pin-ready .lp-gallery-note{margin-top:6px}
+ .lp-pin-ready .lp-cta{min-height:54px}
+}
 </style>
 </head>
 <body>
@@ -402,13 +427,14 @@ body.lp-navigation-leaving main,body.lp-navigation-leaving .lp-footer{opacity:0;
  </div>
 </section>
 <section class="lp-section lp-portfolio" id="projetos" aria-labelledby="projects-title">
- <div class="lp-wrap">
+ <div class="lp-portfolio-pin"><div class="lp-wrap">
   <header class="lp-heading" data-lp-reveal><p class="lp-kicker">PORTFÓLIO</p><h2 id="projects-title">Conheça os sofás da New Moblly instalados em estabelecimentos reais!</h2><p>Confira de perto nossos modelos, acabamentos e diferentes possibilidades de composição para ambientes comerciais.</p></header>
   <div class="lp-gallery-toolbar" data-lp-reveal><div class="lp-filters" role="group" aria-label="Filtrar projetos"><button type="button" data-filter="all" aria-pressed="true">Todos <span>11</span></button><button type="button" data-filter="restaurantes" aria-pressed="false">Restaurantes <span>6</span></button><button type="button" data-filter="sorveterias" aria-pressed="false">Sorveterias e açaiterias <span>3</span></button><button type="button" data-filter="docerias" aria-pressed="false">Docerias e confeitarias <span>2</span></button></div><div class="lp-gallery-nav"><button type="button" data-gallery-step="-1" aria-label="Projeto anterior"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button><button type="button" data-gallery-step="1" aria-label="Próximo projeto"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="m9 6 6 6-6 6"/></svg></button></div></div>
   <div class="lp-gallery" tabindex="0" aria-label="Galeria de estabelecimentos" data-lp-reveal><article class="lp-project-card lp-spot" data-segment="restaurantes" data-project="Tangerina"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Restaurantes</p><h3>Tangerina</h3></div></article><article class="lp-project-card lp-spot" data-segment="restaurantes" data-project="Padaria Pérola"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Restaurantes</p><h3>Padaria Pérola</h3></div></article><article class="lp-project-card lp-spot" data-segment="restaurantes" data-project="Monalisas"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Restaurantes</p><h3>Monalisas</h3></div></article><article class="lp-project-card lp-spot" data-segment="restaurantes" data-project="Braza"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Restaurantes</p><h3>Braza</h3></div></article><article class="lp-project-card lp-spot" data-segment="restaurantes" data-project="Maria da Villa"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Restaurantes</p><h3>Maria da Villa</h3></div></article><article class="lp-project-card lp-spot" data-segment="restaurantes" data-project="Circo da Pizza"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Restaurantes</p><h3>Circo da Pizza</h3></div></article><article class="lp-project-card lp-spot" data-segment="sorveterias" data-project="Ice Yelloy"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Sorveterias e açaiterias</p><h3>Ice Yelloy</h3></div></article><article class="lp-project-card lp-spot" data-segment="sorveterias" data-project="Kipanda"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Sorveterias e açaiterias</p><h3>Kipanda</h3></div></article><article class="lp-project-card lp-spot" data-segment="sorveterias" data-project="Viva Açaí"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Sorveterias e açaiterias</p><h3>Viva Açaí</h3></div></article><article class="lp-project-card lp-spot" data-segment="docerias" data-project="Nessucre"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Docerias e confeitarias</p><h3>Nessucre</h3></div></article><article class="lp-project-card lp-spot" data-segment="docerias" data-project="Crhis Brigadeiro"><div class="lp-project-media"><svg viewBox="0 0 32 32" fill="none" stroke="currentColor" stroke-width="1.15" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="4" y="5" width="24" height="22" rx="3"/><circle cx="11" cy="12" r="2.5"/><path d="m5 23 8-7 5 4 4-5 5 5"/></svg><span>Foto do projeto em preparação</span></div><div class="lp-project-info"><p>Docerias e confeitarias</p><h3>Crhis Brigadeiro</h3></div></article></div>
+  <div class="lp-scroll-progress" aria-hidden="true"><span class="lp-scroll-track"><span></span></span><span class="lp-scroll-hint">Role para explorar os projetos</span></div>
   <p class="lp-gallery-note" role="status" id="lp-gallery-count">11 projetos · Fotos a inserir</p>
   <div class="lp-center" data-lp-reveal><a class="cta lp-cta hero-quote-cta" href="https://wa.me/5511992217592?text=Ol%C3%A1!%20Gostaria%20de%20solicitar%20um%20or%C3%A7amento%20de%20sof%C3%A1s%20comerciais%20(booths)%20para%20meu%20estabelecimento." target="_blank" rel="noopener noreferrer"><span>SOLICITAR ORÇAMENTO PELO WHATSAPP</span><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a></div>
- </div>
+ </div></div>
 </section>
 <section class="lp-section lp-reviews" id="avaliacoes" aria-labelledby="reviews-title">
  <div class="lp-wrap">
@@ -720,14 +746,76 @@ window.NM_BOOTH_MODELS = {"capitone":"data:image/webp;base64,UklGRrRvAQBXRUJQVlA
    document.querySelector('#inicio').scrollIntoView({behavior:reduced.matches?'instant':'smooth'});
  }));
  const gallery=document.querySelector('.lp-gallery'),filters=[...document.querySelectorAll('[data-filter]')],count=document.querySelector('#lp-gallery-count'),nav=[...document.querySelectorAll('[data-gallery-step]')];
- function updateNav(){nav[0].disabled=gallery.scrollLeft<3;nav[1].disabled=gallery.scrollLeft+gallery.clientWidth>=gallery.scrollWidth-4}
+ const portfolio=document.querySelector('#projetos'),pin=portfolio.querySelector('.lp-portfolio-pin'),wrap=pin.querySelector('.lp-wrap');
+ const pinMedia=matchMedia('(min-width:769px) and (hover:hover) and (pointer:fine) and (prefers-reduced-motion:no-preference)');
+ const clampGallery=(v,min,max)=>Math.max(min,Math.min(max,v));
+ let pinned=false,travel=0,maxX=0,frame=0,resizeFrame=0;
+ const startY=()=>portfolio.getBoundingClientRect().top+window.scrollY;
+ function updateNav(){
+   nav[0].disabled=gallery.scrollLeft<3;
+   nav[1].disabled=gallery.scrollLeft+gallery.clientWidth>=gallery.scrollWidth-4;
+   const max=Math.max(0,gallery.scrollWidth-gallery.clientWidth);
+   portfolio.style.setProperty('--lp-scroll-progress',max?clampGallery(gallery.scrollLeft/max,0,1):0);
+ }
+ function renderScroll(){
+   frame=0;
+   if(pinned&&travel>0){const progress=clampGallery((window.scrollY-startY())/travel,0,1);gallery.scrollLeft=progress*maxX}
+   updateNav();
+ }
+ function scheduleScroll(){if(!frame)frame=requestAnimationFrame(renderScroll)}
+ function measure(reset=false){
+   const oldStart=startY(),wasInPin=pinned&&window.scrollY>=oldStart-2&&window.scrollY<=oldStart+travel+2;
+   const oldX=gallery.scrollLeft;
+   pinned=false;travel=0;maxX=0;
+   portfolio.classList.remove('lp-pin-ready');
+   portfolio.style.removeProperty('--lp-pin-travel');
+   if(pinMedia.matches){
+     const vh=window.innerHeight;
+     portfolio.style.setProperty('--lp-pin-vh',vh+'px');
+     portfolio.classList.add('lp-pin-ready');
+     maxX=Math.max(0,gallery.scrollWidth-gallery.clientWidth);
+     if(maxX>4&&wrap.getBoundingClientRect().height<=vh-4){
+       travel=Math.ceil(maxX/1.12);
+       portfolio.style.setProperty('--lp-pin-travel',travel+'px');
+       pinned=true;
+     }else{
+       portfolio.classList.remove('lp-pin-ready');portfolio.style.removeProperty('--lp-pin-vh');
+     }
+   }else portfolio.style.removeProperty('--lp-pin-vh');
+   if(reset){
+     gallery.scrollLeft=0;
+     if(wasInPin)window.scrollTo({top:startY(),behavior:'instant'});
+   }else if(pinned&&wasInPin){
+     window.scrollTo({top:startY()+clampGallery(oldX/maxX,0,1)*travel,behavior:'instant'});
+   }
+   scheduleScroll();
+ }
+ function moveGallery(x){
+   const max=Math.max(0,gallery.scrollWidth-gallery.clientWidth),target=clampGallery(x,0,max);
+   if(pinned&&maxX>0){window.scrollTo({top:startY()+target/maxX*travel,behavior:'smooth'})}
+   else gallery.scrollTo({left:target,behavior:reduced.matches?'instant':'smooth'});
+ }
  filters.forEach(b=>b.addEventListener('click',()=>{
    filters.forEach(f=>f.setAttribute('aria-pressed',String(f===b)));
    let total=0;gallery.querySelectorAll('[data-project]').forEach(c=>{c.hidden=b.dataset.filter!=='all'&&c.dataset.segment!==b.dataset.filter;if(!c.hidden)total++});
-   gallery.scrollTo({left:0,behavior:'instant'});count.textContent=total+' '+(total===1?'projeto':'projetos')+' · Fotos a inserir';requestAnimationFrame(updateNav);
+   count.textContent=total+' '+(total===1?'projeto':'projetos')+' · Fotos a inserir';
+   measure(true);
  }));
- nav.forEach(b=>b.addEventListener('click',()=>{const card=gallery.querySelector('[data-project]:not([hidden])');gallery.scrollBy({left:(card?card.getBoundingClientRect().width+18:gallery.clientWidth)*Number(b.dataset.galleryStep),behavior:reduced.matches?'instant':'smooth'})}));
- gallery.addEventListener('scroll',updateNav,{passive:true});window.addEventListener('resize',updateNav);updateNav();
+ const stepWidth=()=>{const card=gallery.querySelector('[data-project]:not([hidden])');return card?card.getBoundingClientRect().width+(parseFloat(getComputedStyle(gallery).columnGap)||0):gallery.clientWidth};
+ nav.forEach(b=>b.addEventListener('click',()=>moveGallery(gallery.scrollLeft+stepWidth()*Number(b.dataset.galleryStep))));
+ gallery.addEventListener('keydown',e=>{
+   if(!pinned)return;
+   const x={ArrowLeft:gallery.scrollLeft-stepWidth(),ArrowRight:gallery.scrollLeft+stepWidth(),Home:0,End:maxX}[e.key];
+   if(x!==undefined){e.preventDefault();moveGallery(x)}
+ });
+ gallery.addEventListener('scroll',updateNav,{passive:true});
+ window.addEventListener('scroll',scheduleScroll,{passive:true});
+ function scheduleMeasure(){if(resizeFrame)cancelAnimationFrame(resizeFrame);resizeFrame=requestAnimationFrame(()=>{resizeFrame=0;measure()})}
+ window.addEventListener('resize',scheduleMeasure,{passive:true});
+ pinMedia.addEventListener?.('change',scheduleMeasure);
+ if(document.fonts?.ready)document.fonts.ready.then(scheduleMeasure);
+ window.addEventListener('pageshow',scheduleMeasure);
+ measure();
  if(!reduced.matches){
   if('IntersectionObserver' in window){const io=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting){e.target.classList.remove('lp-pending');e.target.classList.add('lp-visible');io.unobserve(e.target)}}),{threshold:.09});document.querySelectorAll('[data-lp-reveal]').forEach(el=>{el.classList.add('lp-pending');io.observe(el)})}
   if(matchMedia('(hover:hover)').matches){document.querySelectorAll('.lp-spot').forEach(el=>{el.addEventListener('pointermove',e=>{const r=el.getBoundingClientRect();el.style.setProperty('--lp-x',(e.clientX-r.left)+'px');el.style.setProperty('--lp-y',(e.clientY-r.top)+'px');el.style.setProperty('--lp-light','1')},{passive:true});el.addEventListener('pointerleave',()=>el.style.setProperty('--lp-light','0'))})}
