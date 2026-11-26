@@ -248,6 +248,18 @@
 .hero .hero-quote-cta:focus-visible{outline:2px solid #b92b27;outline-offset:5px}
 @media(max-width:768px){.hero .hero-quote-cta{min-height:59px;padding:14px 17px;gap:9px;max-width:400px}.hero-quote-cta .quote-cta-icon{width:21px;height:21px}.hero-quote-cta .quote-cta-arrow{width:18px;height:18px}}
 @media(prefers-reduced-motion:reduce){.hero .hero-quote-cta,.hero-quote-cta::before,.hero-quote-cta::after,.hero-quote-cta .quote-cta-icon,.hero-quote-cta .quote-cta-arrow{animation:none!important;transition:none!important;transform:none!important}}
+
+/* V20 — microinteração de preenchimento do ícone do formulário */
+.hero-quote-cta .quote-write-line{stroke-dasharray:1;stroke-dashoffset:0}
+@keyframes quote-write-line{0%{stroke-dashoffset:1;opacity:0}12%{opacity:1}100%{stroke-dashoffset:0;opacity:1}}
+@media(hover:hover) and (prefers-reduced-motion:no-preference){
+ .hero-quote-cta:hover .quote-cta-icon{animation:none;transform:none}
+ .hero-quote-cta:hover .quote-write-line{animation:quote-write-line .32s cubic-bezier(.22,1,.36,1) var(--write-delay) both}
+}
+@media(prefers-reduced-motion:no-preference){
+ .hero-quote-cta:focus-visible .quote-cta-icon{animation:none;transform:none}
+ .hero-quote-cta:focus-visible .quote-write-line{animation:quote-write-line .32s cubic-bezier(.22,1,.36,1) var(--write-delay) both}
+}
 </style>
 </head>
 <body>
@@ -275,7 +287,7 @@
     
     <div class="hero-conversion">
       <p class="hero-description">Conheça os sofás comerciais da New Moblly e explore diferentes modelos, cores e acabamentos para equipar seu restaurante, sorveteria, açaiteria ou doceria.</p>
-      <a class="cta hero-quote-cta" id="cta-form" href="/lp-imersiva/formulario/"><svg class="quote-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>SOLICITAR MEU ORÇAMENTO</span><svg class="quote-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
+      <a class="cta hero-quote-cta" id="cta-form" href="/lp-imersiva/formulario/"><svg class="quote-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path class="quote-write-line" style="--write-delay:0ms" pathLength="1" d="M9 8h6"/><path class="quote-write-line" style="--write-delay:120ms" pathLength="1" d="M9 12h6"/><path class="quote-write-line" style="--write-delay:240ms" pathLength="1" d="M9 16h3"/></svg><span>SOLICITAR MEU ORÇAMENTO</span><svg class="quote-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
     </div>
   </div>
 </section>
