@@ -593,6 +593,9 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
 .nm-wave-text:focus-within .nm-wave-word,.nm-wave-text:focus-visible .nm-wave-word{opacity:1;transform:none}
 @media(max-width:768px){.nm-wave-word{transform:translate3d(0,calc((1 - var(--nm-word-progress))*.94em),0) rotate(calc((1 - var(--nm-word-progress))*1.4deg))}}
 @media(prefers-reduced-motion:reduce){.nm-wave-word{opacity:1!important;transform:none!important}}
+/* V38 — finalização exata da onda, inclusive na última linha da página */
+.nm-scroll-reveal.nm-reveal-complete{opacity:1;translate:none}
+.nm-wave-text.nm-reveal-complete .nm-wave-word{opacity:1;transform:none}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
@@ -1178,11 +1181,13 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
  add('.lp-portfolio .lp-gallery-toolbar',0,'portfolio-tools');
  add('.lp-portfolio .lp-scroll-progress, .lp-portfolio .lp-gallery-note, .lp-portfolio .lp-center',8,'portfolio-bottom');
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
- let enabled=false,frame=0,refreshTimer=0,dirty=true,mobile=false,lastWidth=0,lastHeight=0;
+ let enabled=false,frame=0,refreshTimer=0,dirty=true,mobile=false,lastWidth=0,lastHeight=0,scrollLimit=0;
  function paint(e,p,force=false){
    p=clamp(p,0,1);
-   if(!force&&Math.abs(p-e.last)<.001)return;
+   if(!force&&p!==0&&p!==1&&Math.abs(p-e.last)<.001)return;
+   if(!force&&p===e.last)return;
    e.last=p;
+   e.el.classList.toggle('nm-reveal-complete',p===1);
    // Smoothstep retains exact reversibility: same scroll position, same animation state.
    const eased=p*p*(3-2*p);
    const distance=mobile?52:78;
@@ -1191,10 +1196,14 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
    e.el.style.setProperty('--nm-reveal-y',((1-eased)*distance).toFixed(2)+'px');
  }
  function readRanges(){
-   const y=window.scrollY,vh=window.innerHeight,max=Math.max(0,document.documentElement.scrollHeight-vh);
+   const y=window.scrollY,vh=window.innerHeight;
+   // Measure the real scroll limit without translated elements extending the document.
+   entries.forEach(e=>e.el.classList.remove('nm-scroll-reveal'));
+   const scroller=document.scrollingElement||document.documentElement;
+   const max=Math.max(0,scroller.scrollHeight-scroller.clientHeight);
+   scrollLimit=max;
    mobile=window.innerWidth<=768;
    const portfolioTop=portfolio.getBoundingClientRect().top+y;
-   entries.forEach(e=>e.el.classList.remove('nm-scroll-reveal'));
    for(const e of entries){
      const r=e.el.getBoundingClientRect(),top=r.top+y;
      let a,b;
@@ -1206,7 +1215,13 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
        a=top-vh*.97+e.stagger;
        b=top-vh*(e.wave?.53:.59)+e.stagger*.25;
      }
-     // Above-the-fold content remains readable on initial load. Footer completes at page end.
+     // Finish the final CTA and footer before the physical end of the page.
+     if(e.el.closest('.lp-final,.lp-footer')){
+       const finish=Math.max(0,max-Math.min(96,vh*.12));
+       b=Math.min(b,finish);
+       a=Math.min(a,b-Math.min(160,vh*.24));
+     }
+     // Above-the-fold content remains readable on initial load.
      if(b<=0||max<=0){e.start=-2;e.end=-1}
      else{
        e.start=Math.min(a,Math.max(0,max-1));
@@ -1221,8 +1236,10 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
    frame=0;if(!enabled)return;
    const remeasure=dirty;if(remeasure)readRanges();
    const y=window.scrollY;
+   const scroller=document.scrollingElement||document.documentElement;
+   const atEnd=y>=scrollLimit-4||y>=scroller.scrollHeight-scroller.clientHeight-4;
    for(const e of entries){
-     const p=clamp((y-e.start)/Math.max(1,e.end-e.start),0,1);
+     const p=atEnd?1:clamp((y-e.start)/Math.max(1,e.end-e.start),0,1);
      paint(e,p,remeasure);
    }
  }
@@ -1239,7 +1256,7 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
    enabled=!reduced.matches;
    if(!enabled){
      if(frame)cancelAnimationFrame(frame);frame=0;clearTimeout(refreshTimer);
-     entries.forEach(e=>{e.el.classList.remove('nm-scroll-reveal');e.el.style.removeProperty('--nm-reveal-opacity');e.el.style.removeProperty('--nm-reveal-y');e.el.style.removeProperty('--nm-wave-progress');e.last=-1});
+     entries.forEach(e=>{e.el.classList.remove('nm-scroll-reveal','nm-reveal-complete');e.el.style.removeProperty('--nm-reveal-opacity');e.el.style.removeProperty('--nm-reveal-y');e.el.style.removeProperty('--nm-wave-progress');e.last=-1});
      return;
    }
    entries.forEach(e=>{if(e.wave)splitWave(e.el)});
