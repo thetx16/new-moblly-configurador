@@ -124,25 +124,28 @@
 }
 @media(max-width:360px){.hero-stage{height:calc(248px + var(--composition-drop))}}
 
-/* V07 — entrada cortina dos textos, sem recorte permanente ou alterações de layout */
+
+/* V09 — cortina em onda, palavra por palavra, sem máscaras ou recortes */
 .hero-header,.hero-conversion{animation:none}
 .brand{animation:enter .85s cubic-bezier(.16,1,.3,1) both}
-.curtain-pending{opacity:0}
-.curtain-enter{animation:text-curtain 1.05s cubic-bezier(.22,1,.36,1) var(--curtain-delay,0ms) backwards}
-.hero-tag{--curtain-delay:80ms}
-.hero h1{--curtain-delay:190ms}
-.glass-card .badge-pill{--curtain-delay:calc(100ms + var(--card-index,0)*85ms)}
-.glass-card .card-title{--curtain-delay:calc(190ms + var(--card-index,0)*85ms)}
-.hero-description{--curtain-delay:90ms}
-.cta>span{--curtain-delay:180ms}
-.secondary{--curtain-delay:260ms}
-@keyframes text-curtain{
-  0%{opacity:0;clip-path:inset(100% -14px -14px -14px);translate:0 15px}
-  20%{opacity:.65}
-  100%{opacity:1;clip-path:inset(-14px -14px -14px -14px);translate:0 0}
+.text-wave-word{display:inline-block;white-space:nowrap;transform-origin:50% 85%}
+.text-wave-ready .text-wave-word{opacity:0}
+.text-wave-playing .text-wave-word{animation:text-wave-rise .92s cubic-bezier(.19,1,.28,1) both;animation-delay:calc(var(--wave-start,0ms) + var(--wave-delay,0ms))}
+.hero-tag{--wave-start:30ms}
+.hero h1{--wave-start:130ms}
+.glass-card .badge-pill{--wave-start:calc(40ms + var(--card-index,0)*75ms)}
+.glass-card .card-title{--wave-start:calc(110ms + var(--card-index,0)*75ms)}
+.hero-description{--wave-start:50ms}
+.cta>span{--wave-start:110ms}
+.secondary{--wave-start:180ms}
+@keyframes text-wave-rise{
+  0%{opacity:0;transform:translate3d(0,.72em,0) rotate(1.8deg)}
+  35%{opacity:.8}
+  78%{transform:translate3d(0,-.035em,0) rotate(0)}
+  100%{opacity:1;transform:none}
 }
-@media(max-width:768px){.curtain-enter{animation-duration:.9s}}
-@media(prefers-reduced-motion:reduce){.curtain-pending,.curtain-enter{opacity:1!important;clip-path:none!important;translate:none!important}}
+@media(max-width:768px){.text-wave-playing .text-wave-word{animation-duration:.8s}}
+@media(prefers-reduced-motion:reduce){.text-wave-word{opacity:1!important;animation:none!important;transform:none!important}}
 
 /* V08 — seletor de cor com máscara cromática exclusiva do estofamento */
 .booth-stack{aspect-ratio:1400/933;position:relative;flex:none;display:block;overflow:visible}
@@ -254,18 +257,38 @@ for (const link of [whatsapp, form]) {
 <script>
 (() => {
   if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
-  const targets = document.querySelectorAll('.hero-tag,.hero h1,.card-title,.badge-pill,.hero-description,.cta>span,.secondary');
+  const targets = document.querySelectorAll('.hero-tag,.hero h1,.card-title,.badge-pill,.hero-description,.cta>span,.secondary,.picker-label>span,.picker-note');
   const observer = new IntersectionObserver(entries => {
     for (const entry of entries) {
       if (!entry.isIntersecting) continue;
-      const node = entry.target;
-      node.classList.remove('curtain-pending');
-      node.classList.add('curtain-enter');
-      node.addEventListener('animationend', () => node.classList.remove('curtain-enter'), {once:true});
+      const node=entry.target;
+      node.classList.remove('text-wave-ready');
+      node.classList.add('text-wave-playing');
+      // Remove a camada de animação ao final; nenhum texto fica mascarado.
+      setTimeout(()=>node.classList.remove('text-wave-playing'),2000);
       observer.unobserve(node);
     }
-  }, {threshold:.12});
-  for(const node of targets){node.classList.add('curtain-pending');observer.observe(node)}
+  },{threshold:.08,rootMargin:'0px 0px 0px 0px'});
+  for(const node of targets){
+    const walker=document.createTreeWalker(node,NodeFilter.SHOW_TEXT);
+    const texts=[];
+    while(walker.nextNode())texts.push(walker.currentNode);
+    let index=0;
+    for(const tn of texts){
+      if(!tn.nodeValue.trim())continue;
+      const frag=document.createDocumentFragment();
+      for(const part of tn.nodeValue.split(/(\s+)/)){
+        if(!part)continue;
+        if(/^\s+$/.test(part)){frag.append(document.createTextNode(part));continue}
+        const word=document.createElement('span');
+        word.className='text-wave-word';
+        word.style.setProperty('--wave-delay',Math.min(index++*46,620)+'ms');
+        word.textContent=part;frag.append(word);
+      }
+      tn.replaceWith(frag);
+    }
+    if(index){node.classList.add('text-wave-ready');observer.observe(node)}
+  }
 })();
 </script>
 
