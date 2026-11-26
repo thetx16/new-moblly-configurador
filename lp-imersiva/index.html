@@ -582,24 +582,22 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
 }
 
 
-/* V36 — entrada perceptível e reversível, calculada diretamente pela viewport */
-.nm-scroll-reveal{opacity:var(--nm-reveal-opacity,1);translate:0 var(--nm-reveal-y,0px)}
+/* V42 — scroll-triggered finite transitions, never scrubbed */
+.nm-scroll-reveal{opacity:0;translate:0 44px}
+.nm-scroll-reveal.nm-trigger-ready{transition:opacity .48s cubic-bezier(.22,1,.36,1),translate .58s cubic-bezier(.22,1,.36,1)}
+.nm-scroll-reveal.nm-reveal-in{opacity:1;translate:none}
+.nm-scroll-reveal.nm-wave-text{opacity:1;translate:none;transition:none}
+.nm-wave-word{display:inline-block;white-space:nowrap;transform-origin:50% 90%;opacity:1;transform:none}
+.nm-scroll-reveal.nm-wave-text .nm-wave-word{opacity:0;transform:translate3d(0,.86em,0) rotate(1.8deg)}
+.nm-scroll-reveal.nm-wave-text.nm-trigger-ready .nm-wave-word{transition:opacity .38s ease,transform .52s cubic-bezier(.22,1,.36,1);transition-delay:var(--nm-wave-out,0ms)}
+.nm-scroll-reveal.nm-wave-text.nm-reveal-in .nm-wave-word{opacity:1;transform:none;transition-delay:var(--nm-wave-in,0ms)}
 .nm-scroll-reveal:focus-within,.nm-scroll-reveal:focus-visible{opacity:1!important;translate:none!important}
-@media(prefers-reduced-motion:reduce){.nm-scroll-reveal{opacity:1!important;translate:none!important}}
-
-/* V37 — onda de palavras reversível, sem máscara nem recorte */
-.nm-scroll-reveal.nm-wave-text{opacity:1;translate:none}
-.nm-wave-word{display:inline-block;white-space:nowrap;transform-origin:50% 90%;--nm-word-progress:clamp(0,calc((var(--nm-wave-progress,1) - var(--nm-wave-delay,0))*2.15),1);opacity:var(--nm-word-progress);transform:translate3d(0,calc((1 - var(--nm-word-progress))*1.12em),0) rotate(calc((1 - var(--nm-word-progress))*2deg))}
-.nm-wave-text:focus-within .nm-wave-word,.nm-wave-text:focus-visible .nm-wave-word{opacity:1;transform:none}
-@media(max-width:768px){.nm-wave-word{transform:translate3d(0,calc((1 - var(--nm-word-progress))*.94em),0) rotate(calc((1 - var(--nm-word-progress))*1.4deg))}}
-@media(prefers-reduced-motion:reduce){.nm-wave-word{opacity:1!important;transform:none!important}}
-/* V38 — finalização exata da onda, inclusive na última linha da página */
-.nm-scroll-reveal.nm-reveal-complete{opacity:1;translate:none}
-.nm-wave-text.nm-reveal-complete .nm-wave-word{opacity:1;transform:none}
-
+.nm-scroll-reveal:focus-within .nm-wave-word,.nm-scroll-reveal:focus-visible .nm-wave-word{opacity:1!important;transform:none!important;transition:none!important}
+@media(max-width:768px){.nm-scroll-reveal{translate:0 30px}.nm-scroll-reveal.nm-wave-text{translate:none}.nm-scroll-reveal.nm-wave-text .nm-wave-word{transform:translate3d(0,.68em,0) rotate(1.2deg)}.nm-scroll-reveal.nm-wave-text.nm-reveal-in .nm-wave-word{transform:none}}
+@media(prefers-reduced-motion:reduce){.nm-scroll-reveal,.nm-scroll-reveal.nm-wave-text .nm-wave-word{opacity:1!important;translate:none!important;transform:none!important;transition:none!important}}
 /* V39 — official vector brand + cinematic logo draw and expanding SVG mask */
 /* V40 — expansão vermelha em tela cheia e revelação de impacto */
-/* V41 — zoom contínuo da marca inteira com revelação atrás das letras e fade em camadas */
+/* V42 — abertura original V39, com expansão final 15% maior */
 .brand{aspect-ratio:2434/1556}
 .nm-intro{display:none;position:fixed;inset:0;z-index:99999;overflow:hidden;isolation:isolate;touch-action:none}
 html.nm-intro-active .nm-intro{display:block}
@@ -665,32 +663,20 @@ html.nm-intro-hold .hero,html.nm-intro-hold .hero *{animation-play-state:paused!
        paths[i].setAttribute('stroke-opacity',(1-fill).toFixed(4));
      }
    }else{
-     // V41: one continuous camera push through the complete original logo.
-     // Frame the red symbol at left and oversized black lettering at right,
-     // then crossfade the white plate and the artwork separately over the live hero.
-     const elapsed=t-1.53,p=clamp(elapsed/1.48);
-     const q=clamp(p/.78),ease=q*q*(3-2*q);
-     const finalScale=Math.max(w/1500,h/740);
-     const zoom=s*Math.pow(finalScale/s,ease);
-     // Interpolate the camera anchor in vector coordinates, so the entire mark stays rigid.
-     const startAnchorX=(w*.52-tx)/s,startAnchorY=(h*.24-ty)/s;
-     const anchorX=startAnchorX+(1000-startAnchorX)*ease;
-     const anchorY=startAnchorY+(334-startAnchorY)*ease;
-     const x=w*.52-anchorX*zoom,y=h*.24-anchorY*zoom;
-     mark.setAttribute('transform','translate('+x+' '+y+') scale('+zoom+')');
-     for(const path of paths){
-       path.setAttribute('opacity','1');
-       path.setAttribute('fill-opacity','1');
-       path.setAttribute('stroke-opacity','0');
-     }
-     hole.setAttribute('opacity','0');
-     symbol.setAttribute('opacity','0');
-     cover.setAttribute('fill','white');
-     // First reveal the page in the negative space; only then dissolve the giant logo.
-     cover.setAttribute('opacity',(1-smooth((p-.46)/.39)).toFixed(4));
-     mark.setAttribute('opacity',(1-smooth((p-.68)/.32)).toFixed(4));
-     skip.style.opacity=String(1-smooth(p/.27));
-     if(p>=.46)reveal();
+     // V42: restore the original V39 silhouette reveal; only the final zoom is 15% larger.
+     const p=clamp((t-1.53)/.99),ease=p*p*(3-2*p);
+     const centerX=tx+744*s,centerY=ty+900*s;
+     const zoom=s*Math.pow(Math.max(w,h)*1.15/(260*s),ease);
+     const cx=centerX+(w/2-centerX)*ease,cy=centerY+(h/2-centerY)*ease;
+     const transform='translate('+cx+' '+cy+') scale('+zoom+') translate(-744 -900)';
+     hole.setAttribute('transform',transform);symbol.setAttribute('transform',transform);
+     hole.setAttribute('opacity','1');
+     symbol.setAttribute('opacity',(1-smooth((p-.04)/.28)).toFixed(4));
+     paths[0].setAttribute('opacity','0');
+     mark.setAttribute('opacity',(1-smooth(p/.18)).toFixed(4));
+     skip.style.opacity=String(1-smooth(p/.22));
+     if(p>=.14)reveal();
+     if(p>=.82)cover.setAttribute('opacity',(1-smooth((p-.82)/.18)).toFixed(4));
      if(p>=1){finish();return}
    }
    raf=requestAnimationFrame(tick);
@@ -1261,90 +1247,74 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
      }
      node.replaceWith(fragment);
    }
-   words.forEach((word,i)=>word.style.setProperty('--nm-wave-delay',(.53*i/Math.max(1,words.length-1)).toFixed(4)));
+   const total=Math.min(260,Math.max(0,words.length-1)*32);
+   words.forEach((word,i)=>{
+     const delay=Math.round(total*i/Math.max(1,words.length-1));
+     word.style.setProperty('--nm-wave-in',delay+'ms');
+     word.style.setProperty('--nm-wave-out',Math.round((total-delay)*.65)+'ms');
+   });
    el.classList.add('nm-wave-text');
  }
-
- function add(selector,stagger=0,kind='normal'){
-   document.querySelectorAll(selector).forEach((el,i)=>{
+ function add(selector,kind='normal'){
+   document.querySelectorAll(selector).forEach(el=>{
      if(seen.has(el))return;seen.add(el);
-     entries.push({el,stagger:(i%5)*stagger,kind,wave:el.matches(waveSelector),start:0,end:1,last:-1});
+     entries.push({el,kind,wave:el.matches(waveSelector),top:0,bottom:0,visible:null});
    });
  }
- // Keep the original cinematic hero entrance. Its lower copy and CTA follow the scroll.
- add('.hero-description, .hero-conversion > .cta',16);
- add('.lp-catalog .lp-heading > *, .lp-reviews .lp-heading > *',16);
- add('.lp-catalog .lp-product-card',20);
+ add('.hero-description, .hero-conversion > .cta');
+ add('.lp-catalog .lp-heading > *, .lp-reviews .lp-heading > *');
+ add('.lp-catalog .lp-product-card');
  add('.lp-catalog .lp-center, .lp-reviews .lp-center');
- add('.lp-review',24);
- add('.lp-final-copy > .lp-kicker, .lp-final-copy > h2, .lp-final-copy > p',16);
+ add('.lp-review');
+ add('.lp-final-copy > .lp-kicker, .lp-final-copy > h2, .lp-final-copy > p');
  add('.lp-final-form, .lp-final-art');
- add('.lp-footer-inner > *',12);
- // The pinned gallery stays independent; its heading and controls reveal as the section enters.
- add('.lp-portfolio .lp-heading > *',12,'portfolio');
- add('.lp-portfolio .lp-gallery-toolbar',0,'portfolio-tools');
- add('.lp-portfolio .lp-scroll-progress, .lp-portfolio .lp-gallery-note, .lp-portfolio .lp-center',8,'portfolio-bottom');
- const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
- let enabled=false,frame=0,refreshTimer=0,dirty=true,mobile=false,lastWidth=0,lastHeight=0,scrollLimit=0;
- function paint(e,p,force=false){
-   p=clamp(p,0,1);
-   if(!force&&p!==0&&p!==1&&Math.abs(p-e.last)<.001)return;
-   if(!force&&p===e.last)return;
-   e.last=p;
-   e.el.classList.toggle('nm-reveal-complete',p===1);
-   // Smoothstep retains exact reversibility: same scroll position, same animation state.
-   const eased=p*p*(3-2*p);
-   const distance=mobile?52:78;
-   if(e.wave){e.el.style.setProperty('--nm-wave-progress',p.toFixed(4));return}
-   e.el.style.setProperty('--nm-reveal-opacity',eased.toFixed(3));
-   e.el.style.setProperty('--nm-reveal-y',((1-eased)*distance).toFixed(2)+'px');
+ add('.lp-footer-inner > *');
+ add('.lp-portfolio .lp-heading > *, .lp-portfolio .lp-gallery-toolbar, .lp-portfolio .lp-scroll-progress, .lp-portfolio .lp-gallery-note, .lp-portfolio .lp-center','portfolio');
+ let enabled=false,frame=0,refreshTimer=0,dirty=true,lastWidth=0,lastHeight=0,initial=true;
+ function apply(e,on){
+   if(e.visible===on)return;
+   e.visible=on;e.el.classList.toggle('nm-reveal-in',on);
  }
- function readRanges(){
+ function rectWithoutReveal(el){
+   const r=el.getBoundingClientRect();
+   const t=getComputedStyle(el).translate;
+   const shift=t&&t!=='none'?parseFloat(t.split(/\s+/)[1]||'0')||0:0;
+   return {top:r.top-shift,bottom:r.bottom-shift,height:r.height};
+ }
+ function measure(){
    const y=window.scrollY,vh=window.innerHeight;
-   // Measure the real scroll limit without translated elements extending the document.
-   entries.forEach(e=>e.el.classList.remove('nm-scroll-reveal'));
-   const scroller=document.scrollingElement||document.documentElement;
-   const max=Math.max(0,scroller.scrollHeight-scroller.clientHeight);
-   scrollLimit=max;
-   mobile=window.innerWidth<=768;
-   const portfolioTop=portfolio.getBoundingClientRect().top+y;
+   const pr=portfolio.getBoundingClientRect(),pt=pr.top+y,pb=pr.bottom+y;
+   const pin=portfolio.querySelector('.lp-portfolio-pin');
+   const pinned=pin&&portfolio.classList.contains('lp-pin-ready');
+   const pinRect=pinned?pin.getBoundingClientRect():null;
    for(const e of entries){
-     const r=e.el.getBoundingClientRect(),top=r.top+y;
-     let a,b;
-     if(e.kind.startsWith('portfolio')&&portfolio.classList.contains('lp-pin-ready')){
-       const delay=e.kind==='portfolio'?0:e.kind==='portfolio-tools'?vh*.16:vh*.36;
-       a=portfolioTop-vh*.95+delay+e.stagger;
-       b=Math.min(portfolioTop,a+vh*.40);
+     const r=rectWithoutReveal(e.el);
+     if(e.kind==='portfolio'&&pinned){
+       const offset=r.top-pinRect.top;
+       e.top=pt+offset;
+       e.bottom=pb-pinRect.height+offset+r.height;
      }else{
-       a=top-vh*.97+e.stagger;
-       b=top-vh*(e.wave?.53:.59)+e.stagger*.25;
-     }
-     // Finish the final CTA and footer before the physical end of the page.
-     if(e.el.closest('.lp-final,.lp-footer')){
-       const finish=Math.max(0,max-Math.min(96,vh*.12));
-       b=Math.min(b,finish);
-       a=Math.min(a,b-Math.min(160,vh*.24));
-     }
-     // Above-the-fold content remains readable on initial load.
-     if(b<=0||max<=0){e.start=-2;e.end=-1}
-     else{
-       e.start=Math.min(a,Math.max(0,max-1));
-       e.end=Math.max(e.start+1,Math.min(max,b));
-       if(b>max){e.start=Math.min(e.start,Math.max(0,max-vh*.28));e.end=max||1}
+       e.top=r.top+y;e.bottom=r.bottom+y;
      }
    }
-   entries.forEach(e=>e.el.classList.add('nm-scroll-reveal'));
    lastWidth=window.innerWidth;lastHeight=vh;dirty=false;
+ }
+ function decide(e,y,vh,atEnd){
+   // Hysteresis prevents edge chatter. Once triggered, CSS runs the entire
+   // time-based transition without another scroll event or partial progress.
+   if(atEnd&&e.el.closest('.lp-final,.lp-footer'))return true;
+   if(e.visible===true)return e.bottom>y-18&&e.top<y+vh+18;
+   return e.top<y+vh*.91&&e.bottom>y+Math.min(22,vh*.035);
  }
  function render(){
    frame=0;if(!enabled)return;
-   const remeasure=dirty;if(remeasure)readRanges();
-   const y=window.scrollY;
-   const scroller=document.scrollingElement||document.documentElement;
-   const atEnd=y>=scrollLimit-4||y>=scroller.scrollHeight-scroller.clientHeight-4;
-   for(const e of entries){
-     const p=atEnd?1:clamp((y-e.start)/Math.max(1,e.end-e.start),0,1);
-     paint(e,p,remeasure);
+   if(dirty)measure();
+   const y=window.scrollY,vh=window.innerHeight,scroller=document.scrollingElement||document.documentElement;
+   const atEnd=y>=scroller.scrollHeight-scroller.clientHeight-5;
+   for(const e of entries)apply(e,decide(e,y,vh,atEnd));
+   if(initial){
+     initial=false;
+     requestAnimationFrame(()=>{if(enabled)entries.forEach(e=>e.el.classList.add('nm-trigger-ready'))});
    }
  }
  function schedule(){if(enabled&&!frame)frame=requestAnimationFrame(render)}
@@ -1360,17 +1330,18 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
    enabled=!reduced.matches;
    if(!enabled){
      if(frame)cancelAnimationFrame(frame);frame=0;clearTimeout(refreshTimer);
-     entries.forEach(e=>{e.el.classList.remove('nm-scroll-reveal','nm-reveal-complete');e.el.style.removeProperty('--nm-reveal-opacity');e.el.style.removeProperty('--nm-reveal-y');e.el.style.removeProperty('--nm-wave-progress');e.last=-1});
+     entries.forEach(e=>{e.el.classList.remove('nm-scroll-reveal','nm-trigger-ready','nm-reveal-in');e.visible=null});
      return;
    }
-   entries.forEach(e=>{if(e.wave)splitWave(e.el)});
-   dirty=true;render();
+   entries.forEach(e=>{if(e.wave)splitWave(e.el);e.el.classList.add('nm-scroll-reveal')});
+   dirty=true;initial=true;render();
  }
  configure();
  window.addEventListener('scroll',schedule,{passive:true});
  window.addEventListener('resize',()=>refresh(),{passive:true});
  window.addEventListener('pageshow',()=>refresh(true));
  document.addEventListener('nm:portfolio-layout',()=>refresh(true));
+ document.addEventListener('nm:intro-reveal',()=>refresh(true));
  if(document.fonts?.ready)document.fonts.ready.then(()=>refresh(true));
  if('ResizeObserver' in window){
    const observer=new ResizeObserver(()=>refresh(true));
