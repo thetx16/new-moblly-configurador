@@ -714,18 +714,33 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
     ctx.closePath();ctx.fill();
     return ctx.getImageData(0,0,w,h).data;
   }
+  // V30.1 — máscaras sob demanda, processamento cooperativo e cache limitado.
+  const yieldWork=()=>globalThis.scheduler?.yield?globalThis.scheduler.yield():new Promise(resolve=>setTimeout(resolve,0));
   function load(id,sourceImage){
     if(loaded.has(id))return Promise.resolve(loaded.get(id));
     return new Promise((resolve,reject)=>{
       const img=sourceImage||new Image();
       const ready=()=>{try{
-        const w=img.naturalWidth,h=img.naturalHeight;if(!w||!h)throw Error('Imagem indisponível');
+        const naturalW=img.naturalWidth,naturalH=img.naturalHeight;if(!naturalW||!naturalH)throw Error('Imagem indisponível');
+        const limit=matchMedia('(max-width:768px)').matches?1000:1600;
+        const scale=Math.min(1,limit/Math.max(naturalW,naturalH));
+        const w=Math.max(1,Math.round(naturalW*scale)),h=Math.max(1,Math.round(naturalH*scale));
         const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
-        const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
-        const pixels=ctx.getImageData(0,0,w,h),d=pixels.data,mask=new Uint8Array(w*h);let sum=0,count=0;
+        const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0,w,h);
+        const data={w,h,canvas,pixels:null,mask:null,mid:0};
+        loaded.set(id,data);resolve(data);
+      }catch(e){reject(e)}};
+      if(img.complete&&img.naturalWidth)ready();else{img.addEventListener('load',ready,{once:true});img.addEventListener('error',()=>reject(Error('Imagem indisponível')),{once:true});if(!sourceImage)img.src=models[id].src;}
+    });
+  }
+  async function prepareMask(id,data){
+    if(data.mask)return;
+    const {w,h,canvas}=data,ctx=canvas.getContext('2d',{willReadFrequently:true});
+    const pixels=ctx.getImageData(0,0,w,h),d=pixels.data,mask=new Uint8Array(w*h);let sum=0,count=0,budget=performance.now();
         const redShape=models[id].mask==='red'?redUpholsteryMask(w,h):null;
         const chairShape=models[id].mask==='seat'?chairSeatMask(w,h):null;
         for(let i=0,p=0;i<d.length;i+=4,p++){
+          if(p&&p%8192===0&&performance.now()-budget>7){await yieldWork();budget=performance.now()}
           const y=Math.floor(p/w)/h;if(d[i+3]<5)continue;
           const R=d[i],G=d[i+1],B=d[i+2];let m=0;
           if(models[id].mask==='green'&&y>=.035&&y<=.735)m=smooth(2,12,G-R)*smooth(0,7,G-B);
@@ -743,27 +758,27 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
           mask[p]=Math.round(m*255);
           if(m>.9){sum+=.2126*R+.7152*G+.0722*B;count++}
         }
-        const data={w,h,canvas,pixels,mask,mid:clamp(sum/Math.max(1,count),20,230)};
-        loaded.set(id,data);resolve(data);
-      }catch(e){reject(e)}};
-      if(img.complete&&img.naturalWidth)ready();else{img.addEventListener('load',ready,{once:true});img.addEventListener('error',()=>reject(Error('Imagem indisponível')),{once:true});if(!sourceImage)img.src=models[id].src;}
-    });
+
+    data.pixels=pixels;data.mask=mask;data.mid=clamp(sum/Math.max(1,count),20,230);
   }
-  function variant(id,color){
+  async function variant(id,color){
     const data=loaded.get(id);if(color==='original')return data.canvas;
-    const key=id+':'+color;if(variants.has(key))return variants.get(key);
+    const key=id+':'+color;if(variants.has(key)){const cached=variants.get(key);variants.delete(key);variants.set(key,cached);return cached}
     const target=palette[color];if(!target)return data.canvas;
+    await prepareMask(id,data);
     const {w,h,pixels,mask,mid}=data,c=document.createElement('canvas');c.width=w;c.height=h;
     const ctx=c.getContext('2d'),output=ctx.createImageData(w,h);output.data.set(pixels.data);
-    const d=output.data,src=pixels.data;
+    const d=output.data,src=pixels.data;let budget=performance.now();
     for(let i=0,p=0;i<d.length;i+=4,p++){
-      if(!mask[p])continue;const weight=mask[p]/255,lum=.2126*src[i]+.7152*src[i+1]+.0722*src[i+2];
-      for(let k=0;k<3;k++){
-        const v=lum<=mid?target[k]*Math.pow(lum/mid,.9):target[k]+(255-target[k])*Math.pow((lum-mid)/(255-mid),1.22);
-        d[i+k]=Math.round(src[i+k]+(v-src[i+k])*weight);
-      }
+      if(p&&p%8192===0&&performance.now()-budget>7){await yieldWork();budget=performance.now()}
+      if(!mask[p])continue;const weight=mask[p]/255,lum=.2126*src[i]+.7152*src[i+1]+.0722*src[i+2],dark=lum<=mid;
+      const factor=dark?Math.pow(lum/mid,.9):Math.pow((lum-mid)/(255-mid),1.22);
+      for(let k=0;k<3;k++){const v=dark?target[k]*factor:target[k]+(255-target[k])*factor;d[i+k]=Math.round(src[i+k]+(v-src[i+k])*weight)}
     }
-    ctx.putImageData(output,0,0);if(variants.size>=6)variants.delete(variants.keys().next().value);variants.set(key,c);return c;
+    ctx.putImageData(output,0,0);
+    const limit=matchMedia('(max-width:768px)').matches?3:6;
+    while(variants.size>=limit){const first=variants.keys().next().value;const evicted=variants.get(first);variants.delete(first);evicted.width=1;evicted.height=1}
+    variants.set(key,c);return c;
   }
   function draw(layer,canvas){layer.width=canvas.width;layer.height=canvas.height;layer.getContext('2d').drawImage(canvas,0,0)}
   function ui(){
@@ -784,10 +799,11 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
     busy=true;
     try{
       await load(id);
+      const prepared=await variant(id,color);
       const changing=id!==model;
       if(changing&&!reduce.matches){stack.classList.add('model-changing');await sleep(220)}
       const prev=layers[active],next=layers[1-active];
-      draw(next,variant(id,color));
+      draw(next,prepared);
       next.style.transition='none';next.style.opacity='0';next.style.zIndex='2';prev.style.zIndex='1';
       void next.offsetWidth;
       model=id;selected=color;colors.set(id,color);ui();
@@ -807,7 +823,7 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
     modelButtons.forEach(b=>{
       const id=b.dataset.model;b.hidden=false;b.disabled=false;
       if(!models[id])return;
-      b.querySelector('img').src=models[id].src;b.addEventListener('click',()=>go(id));
+      const thumb=b.querySelector('img');thumb.decoding='async';thumb.fetchPriority='low';thumb.src=models[id].src;b.addEventListener('click',()=>go(id));
     });
     buttons.forEach(b=>b.addEventListener('click',()=>choose(desiredModel,b.dataset.color)));
     modelsUI.querySelectorAll('.model-nav').forEach(b=>b.addEventListener('click',()=>step(Number(b.dataset.step))));
