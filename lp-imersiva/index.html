@@ -225,6 +225,58 @@
   .hero-stage .booth{width:min(85%,550px)}
 }
 @media(prefers-reduced-motion:reduce){.model-nav{transition:none!important}}
+
+/* V15 — formulário imersivo em tela inteira */
+.hero{transform-origin:50% 45%;transition:opacity .45s ease,filter .45s ease,transform .55s cubic-bezier(.22,1,.36,1)}
+.hero.form-leaving{opacity:0;filter:blur(18px);transform:scale(.97);pointer-events:none}
+.hero[hidden],.immersive-form[hidden],.immersive-form [hidden]{display:none!important}
+.immersive-form{position:relative;isolation:isolate;min-height:100svh;background:#fff;display:grid;grid-template-rows:auto 1fr auto;padding:clamp(22px,4vw,48px) 24px;overflow:hidden;color:var(--nm-ink)}
+.immersive-form::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 92% 7%,#fff0ef 0,transparent 36%),radial-gradient(ellipse at 6% 100%,#f9efe6 0,transparent 39%)}
+.immersive-form.is-entering{animation:quote-arrival .82s cubic-bezier(.19,1,.3,1) both}
+.immersive-form.is-leaving{animation:quote-depart .37s ease both;pointer-events:none}
+@keyframes quote-arrival{from{opacity:0;filter:blur(18px);transform:scale(1.045)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes quote-depart{to{opacity:0;filter:blur(16px);transform:scale(.98)}}
+.quote-top{width:100%;max-width:var(--nm-container);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.quote-logo .brand{width:96px;margin:0;animation:none}
+.quote-close,.quote-prev{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid #e5d7cd;background:#ffffffb8;color:var(--nm-ink);border-radius:12px;font:700 12px var(--nm-font);min-height:44px;padding:10px 15px;cursor:pointer;transition:background .2s,border-color .2s}
+.quote-close:hover,.quote-prev:hover{border-color:var(--nm-red);color:var(--nm-red)}
+.quote-close svg,.quote-prev svg{width:17px;height:17px}
+.quote-body{width:min(100%,700px);margin:auto;align-self:center;padding:clamp(32px,7vh,84px) 0}
+.quote-heading{font-size:clamp(21px,3.1vw,34px);line-height:1.2;font-weight:800;letter-spacing:-.035em;margin:0 0 12px;text-wrap:balance}
+.quote-intro{font-size:14px;color:var(--nm-muted);line-height:1.6;margin:0 0 32px}
+.quote-intro p{margin:0 0 3px}
+.quote-progress-top{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:11px;letter-spacing:.08em;color:var(--nm-muted);text-transform:uppercase;margin-bottom:11px}
+.quote-progress{height:5px;display:flex;gap:5px;margin-bottom:clamp(22px,4.5vh,40px)}
+.quote-progress span{flex:1;border-radius:10px;background:#e5d7cd;transition:background .3s}
+.quote-progress span.done{background:var(--nm-red)}
+.quote-step{min-height:185px}
+.quote-step.step-enter{animation:quote-step-in .58s cubic-bezier(.22,1,.36,1) both}
+.quote-step.step-out{animation:quote-step-out .2s ease both}
+@keyframes quote-step-in{from{opacity:0;filter:blur(9px);transform:translateY(17px) scale(1.025)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes quote-step-out{to{opacity:0;filter:blur(7px);transform:translateY(-8px)}}
+.quote-field-label{display:block;font-size:clamp(27px,4.3vw,47px);line-height:1.12;letter-spacing:-.04em;font-weight:800;margin:0 0 23px;text-wrap:balance}
+.quote-input{display:block;width:100%;min-height:66px;border:1px solid var(--nm-line);border-radius:14px;background:#fff;color:var(--nm-ink);font:500 clamp(16px,2vw,19px) var(--nm-font);padding:16px 19px;outline:none;transition:border-color .22s,box-shadow .22s}
+.quote-input:focus{border-color:var(--nm-red);box-shadow:0 0 0 4px #d82c2610}
+.quote-input::placeholder{color:#8b817b}
+.quote-options{border:0;padding:0;margin:0;display:grid;gap:10px}
+.quote-option{display:flex;align-items:center;gap:14px;min-height:54px;border:1px solid var(--nm-line);border-radius:12px;padding:13px 17px;background:#fff;cursor:pointer;font-size:15px;font-weight:600;transition:border-color .2s,background .2s}
+.quote-option:has(input:checked){border-color:var(--nm-red);background:#fff0ef}
+.quote-option input{accent-color:var(--nm-red);width:18px;height:18px;flex:none}
+.quote-actions{display:flex;align-items:center;gap:12px;margin-top:18px}
+.quote-next{border:0;cursor:pointer;flex:1;min-height:57px;font-family:var(--nm-font)}
+.quote-next:disabled{opacity:.55;cursor:wait;transform:none}
+.quote-prev{min-height:57px;min-width:112px}
+.quote-error{font-size:13px;line-height:1.5;color:#a52b26;min-height:22px;margin:9px 0 0}
+.quote-help{font-size:11px;color:var(--nm-muted);margin:14px 0 0;line-height:1.5}
+.quote-footer{display:flex;justify-content:center;gap:8px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--nm-muted)}
+.quote-footer svg{width:14px;height:14px}
+.quote-finish h2{font-size:clamp(30px,5vw,52px);line-height:1.1;letter-spacing:-.045em;margin:0 0 20px}
+.quote-finish p{font-size:16px;line-height:1.65;color:var(--nm-muted);margin:0 0 25px}
+.quote-finish .cta{width:100%;max-width:100%}
+.quote-finish .quote-prev{margin-top:14px}
+.immersive-form button:focus-visible,.immersive-form a:focus-visible{outline:2px solid var(--nm-red);outline-offset:4px}
+@media(max-width:768px){.immersive-form{padding:20px 20px 26px}.quote-logo .brand{width:76px}.quote-close{font-size:11px;padding:8px 12px}.quote-body{padding:34px 0}.quote-heading{font-size:24px}.quote-intro{margin-bottom:24px}.quote-field-label{font-size:clamp(25px,7.8vw,36px);margin-bottom:18px}.quote-step{min-height:160px}.quote-input{min-height:60px;font-size:16px}.quote-next,.quote-prev{min-height:54px}.quote-prev{min-width:84px}.quote-options{gap:8px}.quote-option{font-size:14px}.quote-help{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.hero,.immersive-form,.quote-step{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
@@ -253,10 +305,30 @@
     <div class="hero-conversion">
       <p class="hero-description">Conheça os sofás comerciais da New Moblly e explore diferentes modelos, cores e acabamentos para equipar seu restaurante, sorveteria, açaiteria ou doceria.</p>
       <a class="cta" id="cta-whatsapp" href="#" aria-disabled="true" data-preview="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 11.7a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.3-4.6A8.6 8.6 0 1 1 20.6 11.7Z"/><path d="M8.7 7.5c-.4-.5-1.1-.3-1.5.3-.9 1.5.6 4.3 2.7 6s4.7 2.3 5.8.9c.3-.4.6-1.2.1-1.5l-2.1-1.1c-.4-.2-.7.1-1 .6-.2.3-.5.4-.8.2a6.5 6.5 0 0 1-2.7-2.7c-.2-.3 0-.6.2-.8.4-.4.5-.7.3-1Z"/></svg><span>SOLICITE SEU ORÇAMENTO PELO WHATSAPP</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
-      <a class="secondary" id="cta-form" href="#formulario" aria-disabled="true" data-preview="true">Prefiro preencher o formulário</a>
+      <a class="secondary" id="cta-form" href="#formulario">Prefiro preencher o formulário</a>
       <p class="preview-message" id="preview-message" role="status" hidden></p>
     </div>
   </div>
+</section>
+
+<section class="immersive-form" id="formulario" aria-labelledby="quote-heading" hidden>
+ <div class="quote-top"><div class="quote-logo"><svg class="brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507 324" role="img" aria-label="New Moblly"><path fill="#FF3A34" d="M153 0L2 66V258L154 322 307 258 308 177C306 158 285 150 261 150H240C217 143 205 122 208 94L215 63C220 30 188 5 153 0Z"/><path fill="#211F1F" fill-rule="evenodd" d="M393,74 404,77 412,87 412,99 410,103 402,110 394,112 385,110 377,102 377,84 385,76ZM336,74 347,77 353,83 356,92 353,103 347,109 338,112 328,110 321,103 318,94 320,84 328,76ZM464,71 463,98 466,105 472,111 482,115 492,114 498,110 501,111 500,120 491,129 482,131 483,135 489,135 501,127 506,117 506,72 501,72 500,101 495,107 489,110 481,110 476,108 468,98 468,73ZM237,72 236,113 238,115 241,114 242,83 250,75 260,75 268,82 270,115 274,114 275,82 283,75 295,76 300,81 302,86 302,114 305,115 307,113 307,87 304,78 298,72 293,70 283,70 278,72 273,77 270,77 265,72 260,70 251,70 243,74 240,71ZM336,69 324,73 317,80 314,86 314,100 317,106 326,114 331,116 342,116 348,114 357,106 360,98 360,88 358,82 350,73ZM446,60 445,113 449,115 450,61ZM430,60 429,113 430,115 433,115 434,61ZM373,60 373,115 376,115 378,111 388,116 399,116 405,114 413,107 417,99 417,87 414,80 408,74 400,70 388,70 378,75 377,62ZM321,10 322,13 297,37 294,32 294,22 296,17 306,9 314,8ZM334,6 349,48 352,49 354,47 363,21 366,17 368,18 378,47 380,49 383,48 398,8 397,5 393,6 385,30 381,36 378,33 368,5 364,5 352,37 349,34 339,6ZM310,3 301,6 293,13 289,21 289,32 294,42 301,48 306,50 318,50 326,46 329,42 325,40 318,45 307,45 304,44 302,40 329,13 329,10 322,5ZM237,5 237,48 241,48 242,17 249,10 255,8 264,9 272,16 274,20 274,46 276,49 279,48 279,20 276,13 269,6 260,3 248,5 243,9 241,5Z"/></svg></div><button class="quote-close" type="button" id="quote-close"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>Voltar ao site</button></div>
+ <div class="quote-body">
+  <div id="quote-flow">
+   <h2 class="quote-heading" id="quote-heading" tabindex="-1">Vamos encontrar os booths ideais para o seu estabelecimento?</h2>
+   <div class="quote-intro"><p>Prefere que nossa equipe entre em contato com você?</p><p>Preencha o formulário abaixo.</p></div>
+   <div class="quote-progress-top"><span id="quote-count">Etapa 1 de 5</span><span id="quote-percent">20%</span></div>
+   <div id="quote-progress" class="quote-progress" role="progressbar" aria-label="Progresso do formulário" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20"></div>
+   <form id="quote-fields" novalidate data-endpoint="">
+    <div class="quote-step" id="quote-step"></div>
+    <p class="quote-error" id="quote-error" role="alert"></p>
+    <div class="quote-actions"><button class="quote-prev" id="quote-prev" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>Voltar</button><button class="cta quote-next" id="quote-next" type="submit">CONTINUAR <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+    <p class="quote-help" id="quote-help"></p>
+   </form>
+  </div>
+  <div class="quote-finish" id="quote-finish" hidden tabindex="-1"></div>
+ </div>
+ <div class="quote-footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>NEW MOBLLY</div>
 </section>
 </main>
 <script>// Configure a URL oficial e o destino do formulário quando as próximas etapas estiverem prontas.
@@ -494,6 +566,90 @@ for (const link of [whatsapp, form]) {
     stack.addEventListener('pointerup',e=>{if(!start||start.id!==e.pointerId)return;const dx=e.clientX-start.x,dy=e.clientY-start.y;start=null;if(Math.abs(dx)>45&&Math.abs(dx)>Math.abs(dy)*1.3)step(dx<0?1:-1)});
     stack.addEventListener('pointercancel',()=>start=null);
   }).catch(e=>console.warn('Personalização indisponível',e));
+})();
+</script>
+
+<script>
+(() => {
+ const hero=document.querySelector('.hero'),view=document.querySelector('#formulario'),trigger=document.querySelector('#cta-form');
+ const form=document.querySelector('#quote-fields'),step=document.querySelector('#quote-step'),prev=document.querySelector('#quote-prev'),next=document.querySelector('#quote-next'),err=document.querySelector('#quote-error'),help=document.querySelector('#quote-help'),flow=document.querySelector('#quote-flow'),finish=document.querySelector('#quote-finish');
+ if(!hero||!view||!form||!trigger)return;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)'),sleep=ms=>new Promise(r=>setTimeout(r,reduce.matches?0:ms));
+ const mode=new URLSearchParams(location.search).get('form')?.toLowerCase()==='b'?'B':'A';
+ const states=['Acre','Alagoas','Amapá','Amazonas','Bahia','Ceará','Distrito Federal','Espírito Santo','Goiás','Maranhão','Mato Grosso','Mato Grosso do Sul','Minas Gerais','Pará','Paraíba','Paraná','Pernambuco','Piauí','Rio de Janeiro','Rio Grande do Norte','Rio Grande do Sul','Rondônia','Roraima','Santa Catarina','São Paulo','Sergipe','Tocantins'];
+ const fields=[
+  {id:'nome',label:'Nome completo',placeholder:'Digite seu nome',autocomplete:'name'},
+  {id:'whatsapp',label:'WhatsApp',placeholder:'(00) 00000-0000',autocomplete:'tel',type:'tel'},
+  {id:'estabelecimento',label:'Nome do estabelecimento',placeholder:'Nome do seu negócio',autocomplete:'organization'},
+  {id:'cidade',label:'Cidade',placeholder:'Informe sua cidade',autocomplete:'address-level2'},
+  {id:'estado',label:'Estado',placeholder:'Selecione seu estado',options:states,autocomplete:'address-level1'}
+ ];
+ if(mode==='B')fields.push(
+  {id:'funcionamento',label:'Seu estabelecimento já funciona?',choices:['Sim, vou renovar.','Não, estou montando.']},
+  {id:'previsao',label:'Quando pretende comprar os sofás comerciais?',choices:['Nos próximos 30 dias.','De 1 a 3 meses.','De 3 a 6 meses.','Ainda estou planejando.']}
+ );
+ let index=0,values={},moving=false,opened=false,submitted=false,previousScroll=0;
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function phoneMask(value){const d=value.replace(/\D/g,'').slice(0,11);if(!d)return '';if(d.length<=2)return '('+d;const n=d.slice(2),split=n.length>8?5:4;return '('+d.slice(0,2)+') '+n.slice(0,split)+(n.length>split?'-'+n.slice(split):'')}
+ function render(focus=false){
+   const f=fields[index],val=values[f.id]||'',last=index===fields.length-1;
+   const label=esc(f.label)+'<span aria-hidden="true" style="color:var(--nm-red)"> *</span>';
+   if(f.choices)step.innerHTML='<fieldset class="quote-options"><legend class="quote-field-label">'+label+'</legend>'+f.choices.map((s,i)=>'<label class="quote-option"><input type="radio" name="'+f.id+'" value="'+esc(s)+'" required '+(val===s?'checked':'')+'><span>'+esc(s)+'</span></label>').join('')+'</fieldset>';
+   else if(f.options)step.innerHTML='<label class="quote-field-label" for="quote-input">'+label+'</label><select id="quote-input" class="quote-input" name="'+f.id+'" autocomplete="'+f.autocomplete+'" required aria-describedby="quote-error"><option value="">'+esc(f.placeholder)+'</option>'+f.options.map(s=>'<option '+(val===s?'selected':'')+' value="'+esc(s)+'">'+esc(s)+'</option>').join('')+'</select>';
+   else step.innerHTML='<label class="quote-field-label" for="quote-input">'+label+'</label><input id="quote-input" class="quote-input" name="'+f.id+'" type="'+(f.type||'text')+'" autocomplete="'+f.autocomplete+'" placeholder="'+esc(f.placeholder)+'" value="'+esc(val)+'" maxlength="'+(f.type==='tel'?15:160)+'" required aria-describedby="quote-error">';
+   if(f.type==='tel')step.querySelector('input').addEventListener('input',e=>{e.target.value=phoneMask(e.target.value)});
+   step.addEventListener('input',clearError,{once:true});
+   const pct=Math.round((index+1)/fields.length*100);
+   document.querySelector('#quote-count').textContent='Etapa '+(index+1)+' de '+fields.length;
+   document.querySelector('#quote-percent').textContent=pct+'%';
+   const progress=document.querySelector('#quote-progress');progress.setAttribute('aria-valuenow',pct);progress.innerHTML=fields.map((_,i)=>'<span class="'+(i<=index?'done':'')+'"></span>').join('');
+   prev.hidden=index===0;next.innerHTML=(last?'SOLICITAR MEU ORÇAMENTO':'CONTINUAR')+' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+   help.textContent=last&&!form.dataset.endpoint?'Ao continuar, você poderá enviar sua solicitação pelo WhatsApp.':'';
+   clearError();
+   if(focus&&!matchMedia('(pointer:coarse)').matches)step.querySelector('input,select')?.focus({preventScroll:true});
+ }
+ function clearError(){err.textContent='';step.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'))}
+ function save(validate=true){
+   const f=fields[index],input=f.choices?step.querySelector('input:checked'):step.querySelector('input,select'),v=input?.value.trim()||'';
+   values[f.id]=v;if(!validate)return true;
+   let error=!v?'Preencha este campo para continuar.':'';
+   if(!error&&f.type==='tel'&&!/^\d{10,11}$/.test(v.replace(/\D/g,'')))error='Informe um WhatsApp válido com DDD.';
+   if(error){err.textContent=error;const target=input||step.querySelector('input');target?.setAttribute('aria-invalid','true');target?.focus();return false}
+   return true;
+ }
+ async function change(to){if(moving||to<0||to>=fields.length)return;moving=true;next.disabled=true;step.classList.add('step-out');await sleep(200);index=to;step.classList.remove('step-out');render(true);step.classList.add('step-enter');await sleep(580);step.classList.remove('step-enter');next.disabled=false;moving=false}
+ async function open(){if(opened||moving)return;opened=true;moving=true;previousScroll=window.scrollY;hero.inert=true;hero.classList.add('form-leaving');await sleep(450);hero.hidden=true;view.hidden=false;view.classList.add('is-entering');window.scrollTo(0,0);render(false);document.querySelector('#quote-heading').focus({preventScroll:true});await sleep(820);view.classList.remove('is-entering');moving=false}
+ async function close(){if(!opened||moving)return;moving=true;if(!submitted)save(false);view.classList.add('is-leaving');await sleep(370);view.hidden=true;view.classList.remove('is-leaving');hero.hidden=false;hero.inert=false;requestAnimationFrame(()=>hero.classList.remove('form-leaving'));opened=false;if(submitted){submitted=false;index=0;values={};finish.hidden=true;flow.hidden=false}window.scrollTo(0,previousScroll);trigger.focus({preventScroll:true});moving=false}
+ function selection(){const model=document.querySelector('.model-button[aria-pressed="true"]');const color=document.querySelector('.color-swatch[aria-pressed="true"]');return {modelo:model?.getAttribute('aria-label')||model?.dataset.model||'',cor:color?.getAttribute('aria-label')||''}}
+ function payload(){return {...values,whatsapp:(values.whatsapp||'').replace(/\D/g,''),versao:mode,...selection(),origem:'lp-imersiva'}}
+ async function submit(){
+   if(moving)return;moving=true;next.disabled=true;next.textContent='PREPARANDO...';clearError();
+   const data=payload(),endpoint=form.dataset.endpoint;
+   try{
+     if(endpoint){
+       const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+       if(!response.ok)throw Error('Envio não confirmado');
+       finish.innerHTML='<h2>Recebemos sua solicitação de orçamento!</h2><p>Obrigado pelo interesse na New Moblly. Nossa equipe dará continuidade ao atendimento pelo contato informado para conversar sobre os booths para o seu estabelecimento.</p><button type="button" class="quote-prev finish-back">Voltar ao site</button>';
+       submitted=true;
+     }else{
+       const message=['Olá! Gostaria de solicitar um orçamento de sofás comerciais (booths).','',...fields.map(f=>f.label+': '+values[f.id])];
+       if(data.modelo)message.push('Modelo selecionado: '+data.modelo);
+       if(data.cor)message.push('Cor selecionada: '+data.cor);
+       const url='https://wa.me/5511992217592?text='+encodeURIComponent(message.join('\n'));
+       finish.innerHTML='<h2>Finalize sua solicitação de orçamento.</h2><p>Seus dados estão prontos. Abra o WhatsApp e envie a mensagem para a equipe da New Moblly.</p><a class="cta" id="quote-send-whatsapp" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">ENVIAR PELO WHATSAPP</a><button type="button" class="quote-prev finish-edit">Voltar ao formulário</button>';
+     }
+     flow.hidden=true;finish.hidden=false;finish.classList.add('step-enter');finish.focus({preventScroll:true});window.scrollTo(0,0);
+     finish.querySelector('.finish-back')?.addEventListener('click',close);
+     finish.querySelector('.finish-edit')?.addEventListener('click',()=>{finish.hidden=true;flow.hidden=false;render(false)});
+   }catch(e){err.textContent='Não foi possível confirmar o envio. Tente novamente.'}
+   finally{moving=false;next.disabled=false;if(!flow.hidden)next.textContent='SOLICITAR MEU ORÇAMENTO'}
+ }
+ trigger.addEventListener('click',e=>{e.preventDefault();open()});
+ document.querySelector('#quote-close').addEventListener('click',close);
+ prev.addEventListener('click',()=>{save(false);change(index-1)});
+ form.addEventListener('submit',e=>{e.preventDefault();if(moving||!save())return;index===fields.length-1?submit():change(index+1)});
+ document.addEventListener('keydown',e=>{if(opened&&e.key==='Escape')close()});
+ if(location.hash==='#formulario')open();
 })();
 </script>
 </body>
