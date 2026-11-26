@@ -123,6 +123,26 @@
   .watermark{top:0}
 }
 @media(max-width:360px){.hero-stage{height:calc(248px + var(--composition-drop))}}
+
+/* V07 — entrada cortina dos textos, sem recorte permanente ou alterações de layout */
+.hero-header,.hero-conversion{animation:none}
+.brand{animation:enter .85s cubic-bezier(.16,1,.3,1) both}
+.curtain-pending{opacity:0}
+.curtain-enter{animation:text-curtain 1.05s cubic-bezier(.22,1,.36,1) var(--curtain-delay,0ms) backwards}
+.hero-tag{--curtain-delay:80ms}
+.hero h1{--curtain-delay:190ms}
+.glass-card .badge-pill{--curtain-delay:calc(100ms + var(--card-index,0)*85ms)}
+.glass-card .card-title{--curtain-delay:calc(190ms + var(--card-index,0)*85ms)}
+.hero-description{--curtain-delay:90ms}
+.cta>span{--curtain-delay:180ms}
+.secondary{--curtain-delay:260ms}
+@keyframes text-curtain{
+  0%{opacity:0;clip-path:inset(100% -14px -14px -14px);translate:0 15px}
+  20%{opacity:.65}
+  100%{opacity:1;clip-path:inset(-14px -14px -14px -14px);translate:0 0}
+}
+@media(max-width:768px){.curtain-enter{animation-duration:.9s}}
+@media(prefers-reduced-motion:reduce){.curtain-pending,.curtain-enter{opacity:1!important;clip-path:none!important;translate:none!important}}
 </style>
 </head>
 <body>
@@ -205,6 +225,24 @@ for (const link of [whatsapp, form]) {
   grid.addEventListener('pointerleave',reset,{passive:true});
   grid.addEventListener('pointercancel',reset,{passive:true});
   grid.addEventListener('pointerup', e=>{if(e.pointerType==='touch') reset()},{passive:true});
+})();
+</script>
+
+<script>
+(() => {
+  if (!('IntersectionObserver' in window) || matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+  const targets = document.querySelectorAll('.hero-tag,.hero h1,.card-title,.badge-pill,.hero-description,.cta>span,.secondary');
+  const observer = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      if (!entry.isIntersecting) continue;
+      const node = entry.target;
+      node.classList.remove('curtain-pending');
+      node.classList.add('curtain-enter');
+      node.addEventListener('animationend', () => node.classList.remove('curtain-enter'), {once:true});
+      observer.unobserve(node);
+    }
+  }, {threshold:.12});
+  for(const node of targets){node.classList.add('curtain-pending');observer.observe(node)}
 })();
 </script>
 </body>
