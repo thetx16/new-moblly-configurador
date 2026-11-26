@@ -1,0 +1,27 @@
+{
+  "rewrites": [
+    {
+      "source": "/visualizacao-3d/:slug/:token",
+      "destination": "/configurador.html"
+    }
+  ],
+  "headers": [
+    {
+      "source": "/visualizacao-3d/:slug/:token",
+      "headers": [
+        {
+          "key": "Referrer-Policy",
+          "value": "no-referrer"
+        },
+        {
+          "key": "X-Robots-Tag",
+          "value": "noindex, nofollow"
+        },
+        {
+          "key": "Cache-Control",
+          "value": "private, no-store"
+        }
+      ]
+    }
+  ]
+}
