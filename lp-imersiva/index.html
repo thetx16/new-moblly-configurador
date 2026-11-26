@@ -581,7 +581,8 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
  .lp-portfolio .lp-portfolio-cta>svg{flex:0 0 16px;width:16px;height:16px}
 }
 
-/* V35 — entradas reversíveis vinculadas ao scroll, sem alterar o layout */
+
+/* V36 — entrada perceptível e reversível, calculada diretamente pela viewport */
 .nm-scroll-reveal{opacity:var(--nm-reveal-opacity,1);translate:0 var(--nm-reveal-y,0px)}
 .nm-scroll-reveal:focus-within,.nm-scroll-reveal:focus-visible{opacity:1!important;translate:none!important}
 @media(prefers-reduced-motion:reduce){.nm-scroll-reveal{opacity:1!important;translate:none!important}}
@@ -1127,106 +1128,105 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
 </script><script>
 (() => {
  'use strict';
- const media=matchMedia('(prefers-reduced-motion: reduce)');
- const root=document.querySelector('main'),portfolio=document.querySelector('#projetos');
- if(!root||!portfolio)return;
+ const reduced=matchMedia('(prefers-reduced-motion: reduce)'),portfolio=document.querySelector('#projetos');
+ if(!portfolio)return;
  const entries=[],seen=new Set();
- function add(selector,offset=0,kind='normal'){
+ function add(selector,stagger=0,kind='normal'){
    document.querySelectorAll(selector).forEach((el,i)=>{
      if(seen.has(el))return;seen.add(el);
-     entries.push({el,offset:offset?i%5*offset:0,kind,start:0,end:1,last:-1,tween:null,state:{p:1}});
+     entries.push({el,stagger:(i%5)*stagger,kind,start:0,end:1,last:-1});
    });
  }
- // Hero above the fold retains its original cinematic entry; lower content tracks scroll.
- add('.hero-conversion',0);
- add('.lp-catalog .lp-heading > *, .lp-reviews .lp-heading > *',13);
- add('.lp-catalog .lp-product-card',13);
+ // Keep the original cinematic hero entrance. Its lower copy and CTA follow the scroll.
+ add('.hero-description, .hero-conversion > .cta',16);
+ add('.lp-catalog .lp-heading > *, .lp-reviews .lp-heading > *',16);
+ add('.lp-catalog .lp-product-card',20);
  add('.lp-catalog .lp-center, .lp-reviews .lp-center');
- add('.lp-review',18);
- add('.lp-final-copy > .lp-kicker, .lp-final-copy > h2, .lp-final-copy > p',12);
+ add('.lp-review',24);
+ add('.lp-final-copy > .lp-kicker, .lp-final-copy > h2, .lp-final-copy > p',16);
  add('.lp-final-form, .lp-final-art');
- add('.lp-footer-inner > *',8);
- // Sticky gallery itself retains its own ScrollTrigger. Only the UI receives entrance motion.
- add('.lp-portfolio .lp-heading > *',10,'portfolio');
+ add('.lp-footer-inner > *',12);
+ // The pinned gallery stays independent; its heading and controls reveal as the section enters.
+ add('.lp-portfolio .lp-heading > *',12,'portfolio');
  add('.lp-portfolio .lp-gallery-toolbar',0,'portfolio-tools');
  add('.lp-portfolio .lp-scroll-progress, .lp-portfolio .lp-gallery-note, .lp-portfolio .lp-center',8,'portfolio-bottom');
  const clamp=(v,a,b)=>Math.max(a,Math.min(b,v));
- let frame=0,refreshTimer=0,engine=false,enabled=false,lastWidth=0,lastHeight=0;
+ let enabled=false,frame=0,refreshTimer=0,dirty=true,mobile=false,lastWidth=0,lastHeight=0;
  function paint(e,p,force=false){
    p=clamp(p,0,1);
    if(!force&&Math.abs(p-e.last)<.001)return;
    e.last=p;
+   // Smoothstep retains exact reversibility: same scroll position, same animation state.
    const eased=p*p*(3-2*p);
-   const distance=window.innerWidth<=768?13:23;
-   e.el.style.setProperty('--nm-reveal-opacity',(0.08+.92*eased).toFixed(3));
+   const distance=mobile?52:78;
+   e.el.style.setProperty('--nm-reveal-opacity',eased.toFixed(3));
    e.el.style.setProperty('--nm-reveal-y',((1-eased)*distance).toFixed(2)+'px');
  }
- function progress(e,y){return clamp((y-e.start)/Math.max(1,e.end-e.start),0,1)}
  function readRanges(){
    const y=window.scrollY,vh=window.innerHeight,max=Math.max(0,document.documentElement.scrollHeight-vh);
+   mobile=window.innerWidth<=768;
    const portfolioTop=portfolio.getBoundingClientRect().top+y;
-   // Reset only the independent translate used here before measuring, not the existing hover/arc transforms.
    entries.forEach(e=>e.el.classList.remove('nm-scroll-reveal'));
    for(const e of entries){
-     const r=e.el.getBoundingClientRect();
+     const r=e.el.getBoundingClientRect(),top=r.top+y;
      let a,b;
      if(e.kind.startsWith('portfolio')&&portfolio.classList.contains('lp-pin-ready')){
-       const early=e.kind==='portfolio'?0:e.kind==='portfolio-tools'?.15:.27;
-       a=portfolioTop-vh*(.94-early)+e.offset;
-       b=a+Math.min(180,vh*.27);
+       const delay=e.kind==='portfolio'?0:e.kind==='portfolio-tools'?vh*.16:vh*.36;
+       a=portfolioTop-vh*.95+delay+e.stagger;
+       b=Math.min(portfolioTop,a+vh*.40);
      }else{
-       const top=r.top+y;
-       a=top-vh*.99+e.offset;
-       b=a+Math.min(150,Math.max(55,r.height*.62+40));
+       a=top-vh*.97+e.stagger;
+       b=top-vh*.59+e.stagger*.25;
      }
-     e.start=clamp(a,0,Math.max(0,max-1));
-     e.end=Math.max(e.start+1,Math.min(max,b));
+     // Above-the-fold content remains readable on initial load. Footer completes at page end.
      if(b<=0||max<=0){e.start=-2;e.end=-1}
+     else{
+       e.start=Math.min(a,Math.max(0,max-1));
+       e.end=Math.max(e.start+1,Math.min(max,b));
+       if(b>max){e.start=Math.min(e.start,Math.max(0,max-vh*.28));e.end=max||1}
+     }
    }
    entries.forEach(e=>e.el.classList.add('nm-scroll-reveal'));
-   lastWidth=window.innerWidth;lastHeight=vh;
+   lastWidth=window.innerWidth;lastHeight=vh;dirty=false;
  }
- function renderNative(){frame=0;if(!enabled||engine)return;const y=window.scrollY;entries.forEach(e=>paint(e,progress(e,y)))}
- function schedule(){if(enabled&&!engine&&!frame)frame=requestAnimationFrame(renderNative)}
- function killTweens(){for(const e of entries){if(e.tween){e.tween.scrollTrigger?.kill(false);e.tween.kill();e.tween=null}}}
- function rebuild(){
+ function render(){
+   frame=0;if(!enabled)return;
+   const remeasure=dirty;if(remeasure)readRanges();
+   const y=window.scrollY;
+   for(const e of entries){
+     const p=clamp((y-e.start)/Math.max(1,e.end-e.start),0,1);
+     paint(e,p,remeasure);
+   }
+ }
+ function schedule(){if(enabled&&!frame)frame=requestAnimationFrame(render)}
+ function refresh(force=false){
    if(!enabled)return;
-   readRanges();const y=window.scrollY;
-   entries.forEach(e=>{e.state.p=progress(e,y);paint(e,e.state.p,true)});
-   if(engine){
-     killTweens();
-     for(const e of entries){
-       if(e.end<=0)continue;
-       e.tween=window.gsap.fromTo(e.state,{p:0},{p:1,duration:1,ease:'none',immediateRender:false,onUpdate:()=>paint(e,e.state.p),scrollTrigger:{trigger:e.el,start:()=>e.start,end:()=>e.end,scrub:.18,invalidateOnRefresh:false}});
-     }
-   }else schedule();
- }
- function refreshSoon(force=false){
    clearTimeout(refreshTimer);
    refreshTimer=setTimeout(()=>{
-     if(!enabled)return;
      if(!force&&lastWidth===window.innerWidth&&Math.abs(lastHeight-window.innerHeight)<90&&matchMedia('(pointer:coarse)').matches)return;
-     rebuild();
-     if(engine)window.ScrollTrigger.refresh();
-   },160);
+     dirty=true;schedule();
+   },120);
  }
- function disable(){enabled=false;clearTimeout(refreshTimer);if(frame)cancelAnimationFrame(frame);frame=0;killTweens();entries.forEach(e=>{e.el.classList.remove('nm-scroll-reveal');e.el.style.removeProperty('--nm-reveal-opacity');e.el.style.removeProperty('--nm-reveal-y');e.last=-1})}
  function configure(){
-   if(media.matches){disable();return}
-   if(!enabled)enabled=true;
-   engine=!!(window.gsap&&window.ScrollTrigger);
-   if(engine)window.gsap.registerPlugin(window.ScrollTrigger);
-   rebuild();
+   enabled=!reduced.matches;
+   if(!enabled){
+     if(frame)cancelAnimationFrame(frame);frame=0;clearTimeout(refreshTimer);
+     entries.forEach(e=>{e.el.classList.remove('nm-scroll-reveal');e.el.style.removeProperty('--nm-reveal-opacity');e.el.style.removeProperty('--nm-reveal-y');e.last=-1});
+     return;
+   }
+   dirty=true;render();
  }
- // Start immediately using the native fallback; deferred GSAP may enhance it at DOM ready.
  configure();
- if(document.readyState==='loading')document.addEventListener('DOMContentLoaded',()=>{if(!media.matches&&!engine&&window.gsap&&window.ScrollTrigger)configure()},{once:true});
  window.addEventListener('scroll',schedule,{passive:true});
- window.addEventListener('resize',()=>refreshSoon(),{passive:true});
- document.addEventListener('nm:portfolio-layout',()=>refreshSoon(true));
- window.addEventListener('pageshow',()=>refreshSoon(true));
- if(document.fonts?.ready)document.fonts.ready.then(()=>refreshSoon(true));
- media.addEventListener?.('change',configure);
+ window.addEventListener('resize',()=>refresh(),{passive:true});
+ window.addEventListener('pageshow',()=>refresh(true));
+ document.addEventListener('nm:portfolio-layout',()=>refresh(true));
+ if(document.fonts?.ready)document.fonts.ready.then(()=>refresh(true));
+ if('ResizeObserver' in window){
+   const observer=new ResizeObserver(()=>refresh(true));
+   document.querySelectorAll('.hero,.lp-catalog,.lp-portfolio,.lp-reviews,.lp-final,.lp-footer').forEach(el=>observer.observe(el));
+ }
+ reduced.addEventListener?.('change',configure);
 })();
 </script>
 </body>
