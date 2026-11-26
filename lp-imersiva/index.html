@@ -89,14 +89,33 @@
 @media(max-width:768px){.glass-card{--spot-radius:120px}.product-motion{animation-duration:1.45s}.booth,.product-shadow{animation-delay:1.57s}.word{perspective:650px}.glass-card::after{padding:1px}}
 @media(hover:none){.glass-card{--spot-alpha:.32}.glass-card:hover{transform:none}.glass-card:nth-child(even){--spot-x:100%;--spot-y:0%}.glass-card:nth-child(odd){--spot-x:0%;--spot-y:0%}}
 @media(prefers-reduced-motion:reduce){.word-a .wave-letter{transform:none;opacity:1}.word-b{display:none}.product-motion{opacity:1;transform:none;filter:none}.glass-card{opacity:1;translate:none}}
+
+/* V04 — produto protagonista e glassmorphism sobreposto */
+.brand{width:130px;height:auto;aspect-ratio:507/324;clip-path:none;margin:0 auto 16px}
+.hero-stage{height:clamp(390px,39vw,540px);z-index:1}
+.product{padding-bottom:0}
+.product-motion{align-items:flex-end}
+.booth{width:min(72%,790px);max-height:94%;object-position:center bottom}
+.product-shadow{width:min(65%,720px);bottom:0}
+.glass-grid{max-width:min(100%,1120px);margin:-66px auto 0;gap:18px;z-index:4}
+.glass-card{min-height:142px;background:linear-gradient(145deg,rgba(255,255,255,.57),rgba(255,250,246,.25));border:1px solid rgba(255,255,255,.65);-webkit-backdrop-filter:blur(10px) saturate(145%);backdrop-filter:blur(10px) saturate(145%);box-shadow:0 18px 38px -15px #211f1f26,0 4px 12px #211f1f0a,inset 0 1px 0 #ffffffc9;--spot-radius:220px}
+.glass-card::before{background:radial-gradient(circle var(--spot-radius) at var(--spot-x) var(--spot-y),rgba(255,255,255,.66),rgba(255,58,52,.20) 34%,transparent 76%)}
+.glass-card::after{padding:1.5px;background:radial-gradient(circle var(--spot-radius) at var(--spot-x) var(--spot-y),#fff 0%,#ff817c 22%,#d82c26ad 43%,transparent 78%)}
+.glass-card:hover{border-color:#ffffffbd;box-shadow:0 24px 42px -12px #d82c2633,0 10px 20px #211f1f10,inset 0 1px 0 #fff}
+.card-title{color:var(--nm-ink);text-shadow:0 1px 5px #ffffffb3}
+.badge-icon{background:#fff0eff0}
+@media(max-width:1000px){.glass-grid{max-width:720px;margin-top:-52px;gap:14px}.glass-card{min-height:128px}}
+@media(max-width:768px){.brand{width:105px;margin-bottom:15px}.hero-stage{height:clamp(270px,74vw,440px)}.booth{width:min(100%,550px);max-height:89%}.product{padding-bottom:0}.product-shadow{width:84%}.glass-grid{margin-top:-40px;gap:10px}.glass-card{min-height:112px;padding:15px 8px 17px;--spot-radius:135px;background:linear-gradient(145deg,rgba(255,255,255,.65),rgba(255,250,246,.32))}}
+@media(max-width:360px){.hero-stage{height:248px}.glass-grid{margin-top:-32px}}
+@supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass-card{background:rgba(255,255,255,.85)}}
 </style>
 </head>
 <body>
 <main>
 <section class="hero" aria-labelledby="hero-title" id="inicio">
   <div class="hero-container">
-    <header class="hero-header"><svg width="0" height="0" aria-hidden="true" style="position:absolute;pointer-events:none"><defs><clipPath id="brand-cutout" clipPathUnits="objectBoundingBox"><path d="M .081 .234 L .497 .050 C .58 .067 .67 .121 .671 .206 C .672 .249 .653 .278 .653 .338 C .653 .408 .686 .447 .754 .466 C .856 .458 .926 .485 .929 .559 L .929 .761 L .506 .942 L .081 .762 Z"/></clipPath></defs></svg>
-      <img class="brand" src="https://new-moblly-configurador.vercel.app/assets/logo.jpg" alt="New Moblly" width="150" height="60" onerror="this.hidden=true">
+    <header class="hero-header">
+      <svg class="brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507 324" role="img" aria-label="New Moblly"><path fill="#FF3A34" d="M153 0L2 66V258L154 322 307 258 308 177C306 158 285 150 261 150H240C217 143 205 122 208 94L215 63C220 30 188 5 153 0Z"/><path fill="#211F1F" fill-rule="evenodd" d="M393,74 404,77 412,87 412,99 410,103 402,110 394,112 385,110 377,102 377,84 385,76ZM336,74 347,77 353,83 356,92 353,103 347,109 338,112 328,110 321,103 318,94 320,84 328,76ZM464,71 463,98 466,105 472,111 482,115 492,114 498,110 501,111 500,120 491,129 482,131 483,135 489,135 501,127 506,117 506,72 501,72 500,101 495,107 489,110 481,110 476,108 468,98 468,73ZM237,72 236,113 238,115 241,114 242,83 250,75 260,75 268,82 270,115 274,114 275,82 283,75 295,76 300,81 302,86 302,114 305,115 307,113 307,87 304,78 298,72 293,70 283,70 278,72 273,77 270,77 265,72 260,70 251,70 243,74 240,71ZM336,69 324,73 317,80 314,86 314,100 317,106 326,114 331,116 342,116 348,114 357,106 360,98 360,88 358,82 350,73ZM446,60 445,113 449,115 450,61ZM430,60 429,113 430,115 433,115 434,61ZM373,60 373,115 376,115 378,111 388,116 399,116 405,114 413,107 417,99 417,87 414,80 408,74 400,70 388,70 378,75 377,62ZM321,10 322,13 297,37 294,32 294,22 296,17 306,9 314,8ZM334,6 349,48 352,49 354,47 363,21 366,17 368,18 378,47 380,49 383,48 398,8 397,5 393,6 385,30 381,36 378,33 368,5 364,5 352,37 349,34 339,6ZM310,3 301,6 293,13 289,21 289,32 294,42 301,48 306,50 318,50 326,46 329,42 325,40 318,45 307,45 304,44 302,40 329,13 329,10 322,5ZM237,5 237,48 241,48 242,17 249,10 255,8 264,9 272,16 274,20 274,46 276,49 279,48 279,20 276,13 269,6 260,3 248,5 243,9 241,5Z"/></svg>
       <p class="hero-tag">SOFÁS COMERCIAIS | BOOTHS</p>
       <h1 id="hero-title">Encontre os booths ideais para o seu estabelecimento!</h1>
     </header>
