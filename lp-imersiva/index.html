@@ -262,6 +262,16 @@
 }
 /* V21 — quinto modelo, navegação compacta */
 @media(max-width:768px){.model-thumbs{gap:3px}.model-button{height:29px}.model-picker{gap:2px}.model-nav{height:22px}}
+
+/* V22 — eleva apenas o produto no mobile; mantém a sobreposição inferior dos cards */
+@media(max-width:768px){
+ .hero-stage .product{
+   --mobile-product-lift:32px;
+   top:calc(16px + var(--composition-drop) - var(--mobile-product-lift));
+   bottom:calc(-16px + var(--mobile-product-lift));
+ }
+}
+@media(max-width:360px){.hero-stage .product{--mobile-product-lift:26px}}
 </style>
 </head>
 <body>
