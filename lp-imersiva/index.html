@@ -108,6 +108,10 @@
 @media(max-width:768px){.brand{width:105px;margin-bottom:15px}.hero-stage{height:clamp(270px,74vw,440px)}.booth{width:min(100%,550px);max-height:89%}.product{padding-bottom:0}.product-shadow{width:84%}.glass-grid{margin-top:-40px;gap:10px}.glass-card{min-height:112px;padding:15px 8px 17px;--spot-radius:135px;background:linear-gradient(145deg,rgba(255,255,255,.65),rgba(255,250,246,.32))}}
 @media(max-width:360px){.hero-stage{height:248px}.glass-grid{margin-top:-32px}}
 @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))){.glass-card{background:rgba(255,255,255,.85)}}
+
+/* V05 — deslocamento vertical do booth, preservando entrada e flutuação */
+.product{top:28px;bottom:-28px}
+@media(max-width:768px){.product{top:16px;bottom:-16px}}
 </style>
 </head>
 <body>
