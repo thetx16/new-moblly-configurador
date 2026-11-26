@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Solicitar orçamento | New Moblly</title>
+<meta name="description" content="Solicite um orçamento de booths para o seu estabelecimento.">
+<meta name="robots" content="noindex, nofollow">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;700;800;900&display=swap" rel="stylesheet">
+<style>:root {
+  --nm-red: #D82C26;
+  --nm-red-hover: #B92B27;
+  --nm-red-bright: #FF3A34;
+  --nm-red-soft: #FFF0EF;
+  --nm-cream: #F9EFE6;
+  --nm-surface: #FFFAF6;
+  --nm-white: #FFFFFF;
+  --nm-ink: #211F1F;
+  --nm-muted: #6D625C;
+  --nm-line: #E5D7CD;
+  --nm-warm: #E7D4C6;
+  --nm-font: 'Montserrat', Arial, sans-serif;
+  --nm-radius-sm: 6px;
+  --nm-radius: 9px;
+  --nm-radius-lg: 14px;
+  --nm-shadow: 0 8px 24px #211f1f12;
+  --nm-gradient: radial-gradient(ellipse at 55% 38%, #fff9f3 0%, #f9efe6 57%, #e7d4c6 100%);
+  --nm-container: 1240px;
+  --nm-section-space: clamp(48px, 7vw, 96px);
+}
+*,*::before,*::after{box-sizing:border-box}body{margin:0;background:#fff;color:var(--nm-ink);font-family:var(--nm-font);-webkit-font-smoothing:antialiased}svg{display:block}.brand{height:auto;aspect-ratio:2434/1556;display:block}a:focus-visible{outline:3px solid var(--nm-red);outline-offset:5px}.cta{display:inline-flex;align-items:center;justify-content:center;gap:12px;min-height:56px;padding:15px 26px;border-radius:var(--nm-radius);background:var(--nm-red);color:white;font-weight:800;font-size:13px;text-decoration:none;box-shadow:0 8px 22px #d82c2626;transition:background .25s,transform .25s,box-shadow .25s}.cta:hover{background:var(--nm-red-hover);transform:translateY(-2px);box-shadow:0 12px 28px #d82c263a}.cta svg{width:22px;height:22px;flex-shrink:0}
+/* V15 — formulário imersivo em tela inteira */
+.hero{transform-origin:50% 45%;transition:opacity .45s ease,filter .45s ease,transform .55s cubic-bezier(.22,1,.36,1)}
+.hero.form-leaving{opacity:0;filter:blur(18px);transform:scale(.97);pointer-events:none}
+.hero[hidden],.immersive-form[hidden],.immersive-form [hidden]{display:none!important}
+.immersive-form{position:relative;isolation:isolate;min-height:100svh;background:#fff;display:grid;grid-template-rows:auto 1fr auto;padding:clamp(22px,4vw,48px) 24px;overflow:hidden;color:var(--nm-ink)}
+.immersive-form::before{content:"";position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 92% 7%,#fff0ef 0,transparent 36%),radial-gradient(ellipse at 6% 100%,#f9efe6 0,transparent 39%)}
+.immersive-form.is-entering{animation:quote-arrival .82s cubic-bezier(.19,1,.3,1) both}
+.immersive-form.is-leaving{animation:quote-depart .37s ease both;pointer-events:none}
+@keyframes quote-arrival{from{opacity:0;filter:blur(18px);transform:scale(1.045)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes quote-depart{to{opacity:0;filter:blur(16px);transform:scale(.98)}}
+.quote-top{width:100%;max-width:var(--nm-container);margin:auto;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.quote-logo .brand{width:96px;margin:0;animation:none}
+.quote-close,.quote-prev{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid #e5d7cd;background:#ffffffb8;color:var(--nm-ink);border-radius:12px;font:700 12px var(--nm-font);min-height:44px;padding:10px 15px;cursor:pointer;transition:background .2s,border-color .2s}
+.quote-close:hover,.quote-prev:hover{border-color:var(--nm-red);color:var(--nm-red)}
+.quote-close svg,.quote-prev svg{width:17px;height:17px}
+.quote-body{width:min(100%,700px);margin:auto;align-self:center;padding:clamp(32px,7vh,84px) 0}
+.quote-heading{font-size:clamp(21px,3.1vw,34px);line-height:1.2;font-weight:800;letter-spacing:-.035em;margin:0 0 12px;text-wrap:balance}
+.quote-intro{font-size:14px;color:var(--nm-muted);line-height:1.6;margin:0 0 32px}
+.quote-intro p{margin:0 0 3px}
+.quote-progress-top{display:flex;justify-content:space-between;align-items:center;font-weight:800;font-size:11px;letter-spacing:.08em;color:var(--nm-muted);text-transform:uppercase;margin-bottom:11px}
+.quote-progress{height:5px;display:flex;gap:5px;margin-bottom:clamp(22px,4.5vh,40px)}
+.quote-progress span{flex:1;border-radius:10px;background:#e5d7cd;transition:background .3s}
+.quote-progress span.done{background:var(--nm-red)}
+.quote-step{min-height:185px}
+.quote-step.step-enter{animation:quote-step-in .58s cubic-bezier(.22,1,.36,1) both}
+.quote-step.step-out{animation:quote-step-out .2s ease both}
+@keyframes quote-step-in{from{opacity:0;filter:blur(9px);transform:translateY(17px) scale(1.025)}to{opacity:1;filter:blur(0);transform:none}}
+@keyframes quote-step-out{to{opacity:0;filter:blur(7px);transform:translateY(-8px)}}
+.quote-field-label{display:block;font-size:clamp(27px,4.3vw,47px);line-height:1.12;letter-spacing:-.04em;font-weight:800;margin:0 0 23px;text-wrap:balance}
+.quote-input{display:block;width:100%;min-height:66px;border:1px solid var(--nm-line);border-radius:14px;background:#fff;color:var(--nm-ink);font:500 clamp(16px,2vw,19px) var(--nm-font);padding:16px 19px;outline:none;transition:border-color .22s,box-shadow .22s}
+.quote-input:focus{border-color:var(--nm-red);box-shadow:0 0 0 4px #d82c2610}
+.quote-input::placeholder{color:#8b817b}
+.quote-options{border:0;padding:0;margin:0;display:grid;gap:10px}
+.quote-option{display:flex;align-items:center;gap:14px;min-height:54px;border:1px solid var(--nm-line);border-radius:12px;padding:13px 17px;background:#fff;cursor:pointer;font-size:15px;font-weight:600;transition:border-color .2s,background .2s}
+.quote-option:has(input:checked){border-color:var(--nm-red);background:#fff0ef}
+.quote-option input{accent-color:var(--nm-red);width:18px;height:18px;flex:none}
+.quote-actions{display:flex;align-items:center;gap:12px;margin-top:18px}
+.quote-next{border:0;cursor:pointer;flex:1;min-height:57px;font-family:var(--nm-font)}
+.quote-next:disabled{opacity:.55;cursor:wait;transform:none}
+.quote-prev{min-height:57px;min-width:112px}
+.quote-error{font-size:13px;line-height:1.5;color:#a52b26;min-height:22px;margin:9px 0 0}
+.quote-help{font-size:11px;color:var(--nm-muted);margin:14px 0 0;line-height:1.5}
+.quote-footer{display:flex;justify-content:center;gap:8px;align-items:center;font-size:11px;font-weight:700;letter-spacing:.04em;color:var(--nm-muted)}
+.quote-footer svg{width:14px;height:14px}
+.quote-finish h2{font-size:clamp(30px,5vw,52px);line-height:1.1;letter-spacing:-.045em;margin:0 0 20px}
+.quote-finish p{font-size:16px;line-height:1.65;color:var(--nm-muted);margin:0 0 25px}
+.quote-finish .cta{width:100%;max-width:100%}
+.quote-finish .quote-prev{margin-top:14px}
+.immersive-form button:focus-visible,.immersive-form a:focus-visible{outline:2px solid var(--nm-red);outline-offset:4px}
+@media(max-width:768px){.immersive-form{padding:20px 20px 26px}.quote-logo .brand{width:76px}.quote-close{font-size:11px;padding:8px 12px}.quote-body{padding:34px 0}.quote-heading{font-size:24px}.quote-intro{margin-bottom:24px}.quote-field-label{font-size:clamp(25px,7.8vw,36px);margin-bottom:18px}.quote-step{min-height:160px}.quote-input{min-height:60px;font-size:16px}.quote-next,.quote-prev{min-height:54px}.quote-prev{min-width:84px}.quote-options{gap:8px}.quote-option{font-size:14px}.quote-help{font-size:11px}}
+@media(prefers-reduced-motion:reduce){.hero,.immersive-form,.quote-step{animation:none!important;transition:none!important}}
+.quote-close{text-decoration:none}.quote-step.step-enter,.quote-finish.step-enter{animation:quote-step-in .58s cubic-bezier(.22,1,.36,1) both}
+@media(max-width:768px){.cta{font-size:11px;padding:14px 13px;gap:8px}.quote-next{min-width:0}}
+@media(prefers-reduced-motion:reduce){.quote-finish.step-enter{animation:none!important}}
+
+/* V19 — viewport estável: animação contida, sem rolagem horizontal */
+html,body{width:100%;max-width:100%;height:100%;margin:0;overflow:hidden}
+body>main{width:100%;max-width:100%;height:100vh;height:100dvh;overflow:hidden;position:relative}
+@supports(overflow:clip){body>main{overflow:clip}}
+.immersive-form{width:100%;max-width:100%;height:100%;min-height:0;grid-template-rows:auto minmax(min-content,1fr) auto;overflow-x:hidden;overflow-y:auto;overscroll-behavior-y:contain;padding-block:clamp(18px,3.5vh,40px);padding-block:clamp(18px,3.5dvh,40px)}
+.quote-top,.quote-body,.quote-footer,.quote-flow,.quote-step,.quote-actions{min-width:0;max-width:100%}
+.quote-body{width:min(100%,700px);padding-block:clamp(18px,4vh,42px);padding-block:clamp(18px,4dvh,42px)}
+.quote-input,.quote-option,.quote-next{min-width:0;max-width:100%}
+.quote-step{min-height:0}
+.quote-error:empty,.quote-help:empty{display:none}
+.quote-actions{margin-top:24px}
+.quote-field-label,.quote-heading,.quote-option,.quote-finish{overflow-wrap:anywhere}
+@keyframes quote-arrival{from{opacity:0;filter:blur(18px)}to{opacity:1;filter:blur(0)}}
+.immersive-form.is-entering .quote-body{animation:quote-content-arrival .82s cubic-bezier(.19,1,.3,1) both}
+@keyframes quote-content-arrival{from{transform:scale(1.045)}to{transform:none}}
+@keyframes quote-depart{to{opacity:0;filter:blur(16px)}}
+@media(max-height:760px){.quote-intro{margin-bottom:20px}.quote-progress{margin-bottom:22px}.quote-body{padding-block:22px}.quote-field-label{margin-bottom:16px}}
+@media(max-width:768px){.immersive-form{padding:clamp(14px,3dvh,24px) 20px}.quote-body{padding-block:24px}.quote-actions{margin-top:20px}.quote-step{min-height:0}}
+@media(prefers-reduced-motion:reduce){.immersive-form.is-entering .quote-body{animation:none!important}}
+</style>
+<link rel="icon" type="image/svg+xml" href="../assets/favicon.svg">
+</head><body><main>
+<section class="immersive-form is-entering" id="formulario" aria-labelledby="quote-heading">
+ <div class="quote-top"><div class="quote-logo"><img class="brand" src="../assets/logo-vetorial.svg" width="2434" height="1556" alt="New Moblly" decoding="async"></div><a class="quote-close" id="quote-close" href="../"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="m6 6 12 12M18 6 6 18"/></svg>Voltar ao site</a></div>
+ <div class="quote-body">
+  <div id="quote-flow">
+   <h1 class="quote-heading" id="quote-heading" tabindex="-1">Vamos encontrar os booths ideais para o seu estabelecimento?</h1>
+   <div class="quote-intro"><p>Prefere que nossa equipe entre em contato com você?</p><p>Preencha o formulário abaixo.</p></div>
+   <div class="quote-progress-top"><span id="quote-count">Etapa 1 de 5</span><span id="quote-percent">20%</span></div>
+   <div id="quote-progress" class="quote-progress" role="progressbar" aria-label="Progresso do formulário" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20"></div>
+   <form id="quote-fields" novalidate data-endpoint="">
+    <div class="quote-step" id="quote-step"></div>
+    <p class="quote-error" id="quote-error" role="alert"></p>
+    <div class="quote-actions"><button class="quote-prev" id="quote-prev" type="button" hidden><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><path d="M19 12H5m6-6-6 6 6 6"/></svg>Voltar</button><button class="cta quote-next" id="quote-next" type="submit">CONTINUAR <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></button></div>
+    <p class="quote-help" id="quote-help"></p>
+   </form>
+  </div>
+  <div class="quote-finish" id="quote-finish" hidden tabindex="-1"></div>
+ </div>
+ <div class="quote-footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>NEW MOBLLY</div>
+</section>
+</main>
+<script>
+(() => {
+ const view=document.querySelector('#formulario');
+ const form=document.querySelector('#quote-fields'),step=document.querySelector('#quote-step'),prev=document.querySelector('#quote-prev'),next=document.querySelector('#quote-next'),err=document.querySelector('#quote-error'),help=document.querySelector('#quote-help'),flow=document.querySelector('#quote-flow'),finish=document.querySelector('#quote-finish');
+ if(!view||!form)return;
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)'),sleep=ms=>new Promise(r=>setTimeout(r,reduce.matches?0:ms));
+ const mode=new URLSearchParams(location.search).get('form')?.toLowerCase()==='b'?'B':'A';
+ const states=['Acre','Alagoas','Amapá','Amazonas','Bahia','Ceará','Distrito Federal','Espírito Santo','Goiás','Maranhão','Mato Grosso','Mato Grosso do Sul','Minas Gerais','Pará','Paraíba','Paraná','Pernambuco','Piauí','Rio de Janeiro','Rio Grande do Norte','Rio Grande do Sul','Rondônia','Roraima','Santa Catarina','São Paulo','Sergipe','Tocantins'];
+ const fields=[
+  {id:'nome',label:'Nome completo',placeholder:'Digite seu nome',autocomplete:'name'},
+  {id:'whatsapp',label:'WhatsApp',placeholder:'(00) 00000-0000',autocomplete:'tel',type:'tel'},
+  {id:'estabelecimento',label:'Nome do estabelecimento',placeholder:'Nome do seu negócio',autocomplete:'organization'},
+  {id:'cidade',label:'Cidade',placeholder:'Informe sua cidade',autocomplete:'address-level2'},
+  {id:'estado',label:'Estado',placeholder:'Selecione seu estado',options:states,autocomplete:'address-level1'}
+ ];
+ if(mode==='B')fields.push(
+  {id:'funcionamento',label:'Seu estabelecimento já funciona?',choices:['Sim, vou renovar.','Não, estou montando.']},
+  {id:'previsao',label:'Quando pretende comprar os sofás comerciais?',choices:['Nos próximos 30 dias.','De 1 a 3 meses.','De 3 a 6 meses.','Ainda estou planejando.']}
+ );
+ let index=0,values={},moving=false,submitted=false;
+ const esc=s=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+ function phoneMask(value){const d=value.replace(/\D/g,'').slice(0,11);if(!d)return '';if(d.length<=2)return '('+d;const n=d.slice(2),split=n.length>8?5:4;return '('+d.slice(0,2)+') '+n.slice(0,split)+(n.length>split?'-'+n.slice(split):'')}
+ function render(focus=false){
+   const f=fields[index],val=values[f.id]||'',last=index===fields.length-1;
+   const label=esc(f.label)+'<span aria-hidden="true" style="color:var(--nm-red)"> *</span>';
+   if(f.choices)step.innerHTML='<fieldset class="quote-options"><legend class="quote-field-label">'+label+'</legend>'+f.choices.map((s,i)=>'<label class="quote-option"><input type="radio" name="'+f.id+'" value="'+esc(s)+'" required '+(val===s?'checked':'')+'><span>'+esc(s)+'</span></label>').join('')+'</fieldset>';
+   else if(f.options)step.innerHTML='<label class="quote-field-label" for="quote-input">'+label+'</label><select id="quote-input" class="quote-input" name="'+f.id+'" autocomplete="'+f.autocomplete+'" required aria-describedby="quote-error"><option value="">'+esc(f.placeholder)+'</option>'+f.options.map(s=>'<option '+(val===s?'selected':'')+' value="'+esc(s)+'">'+esc(s)+'</option>').join('')+'</select>';
+   else step.innerHTML='<label class="quote-field-label" for="quote-input">'+label+'</label><input id="quote-input" class="quote-input" name="'+f.id+'" type="'+(f.type||'text')+'" autocomplete="'+f.autocomplete+'" placeholder="'+esc(f.placeholder)+'" value="'+esc(val)+'" maxlength="'+(f.type==='tel'?15:160)+'" required aria-describedby="quote-error">';
+   if(f.type==='tel')step.querySelector('input').addEventListener('input',e=>{e.target.value=phoneMask(e.target.value)});
+   step.addEventListener('input',clearError,{once:true});
+   const pct=Math.round((index+1)/fields.length*100);
+   document.querySelector('#quote-count').textContent='Etapa '+(index+1)+' de '+fields.length;
+   document.querySelector('#quote-percent').textContent=pct+'%';
+   const progress=document.querySelector('#quote-progress');progress.setAttribute('aria-valuenow',pct);progress.innerHTML=fields.map((_,i)=>'<span class="'+(i<=index?'done':'')+'"></span>').join('');
+   prev.hidden=index===0;next.innerHTML=(last?'SOLICITAR MEU ORÇAMENTO':'CONTINUAR')+' <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg>';
+   help.textContent=last&&!form.dataset.endpoint?'Ao continuar, você poderá enviar sua solicitação pelo WhatsApp.':'';
+   clearError();
+   if(focus&&!matchMedia('(pointer:coarse)').matches)step.querySelector('input,select')?.focus({preventScroll:true});
+ }
+ function clearError(){err.textContent='';step.querySelectorAll('[aria-invalid]').forEach(el=>el.removeAttribute('aria-invalid'))}
+ function save(validate=true){
+   const f=fields[index],input=f.choices?step.querySelector('input:checked'):step.querySelector('input,select'),v=input?.value.trim()||'';
+   values[f.id]=v;if(!validate)return true;
+   let error=!v?'Preencha este campo para continuar.':'';
+   if(!error&&f.type==='tel'&&!/^\d{10,11}$/.test(v.replace(/\D/g,'')))error='Informe um WhatsApp válido com DDD.';
+   if(error){err.textContent=error;const target=input||step.querySelector('input');target?.setAttribute('aria-invalid','true');target?.focus();return false}
+   return true;
+ }
+ async function change(to){if(moving||to<0||to>=fields.length)return;moving=true;next.disabled=true;step.classList.add('step-out');await sleep(200);index=to;step.classList.remove('step-out');render(true);step.classList.add('step-enter');await sleep(580);step.classList.remove('step-enter');next.disabled=false;moving=false}
+ const params=new URLSearchParams(location.search);
+ const campaign=new URLSearchParams();
+ for(const [k,v] of params){if(/^(utm_[a-z0-9_]+|gclid|gbraid|wbraid|fbclid|msclkid|ttclid|form)$/i.test(k))campaign.append(k,v)}
+ const backURL='../'+(campaign.size?'?'+campaign.toString():'');
+ const back=document.querySelector('#quote-close');back.href=backURL;
+ async function close(event){if(event){if(event.metaKey||event.ctrlKey||event.shiftKey||event.altKey)return;event.preventDefault()}if(moving)return;moving=true;view.classList.add('is-leaving');await sleep(370);location.assign(backURL)}
+ function selection(){
+   const model=params.get('modelo')||'',color=params.get('cor')||'';
+   const allowedModels=['Booth Canelado','Booth Capitonê','Booth Liso','Booth Horizontal','Cadeira de madeira'];
+   const allowedColors=['Verde original','Amarelo original','Vermelho original','Bege original','Terracota original','Verde','Caramelo','Vinho','Azul-marinho','Grafite'];
+   return {modelo:allowedModels.includes(model)?model:'',cor:allowedColors.includes(color)?color:''};
+ }
+ function payload(){
+   const attribution={};for(const [k,v] of campaign)if(k!=='form')attribution[k]=v;
+   return {...values,whatsapp:(values.whatsapp||'').replace(/\D/g,''),versao:mode,...selection(),origem:'lp02_form',...attribution};
+ }
+ async function submit(){
+   if(moving)return;moving=true;next.disabled=true;next.textContent='PREPARANDO...';clearError();
+   const data=payload(),endpoint=form.dataset.endpoint;
+   try{
+     if(endpoint){
+       const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
+       if(!response.ok)throw Error('Envio não confirmado');
+       submitted=true;
+       try{sessionStorage.setItem('nm_quote_confirmed','1')}catch{}
+       const thanksURL='../obrigado/'+(campaign.size?'?'+campaign.toString():'');
+       view.classList.add('is-leaving');await sleep(370);location.assign(thanksURL);return;
+
+     }else{
+       const message=['Olá! Gostaria de solicitar um orçamento de sofás comerciais (booths).','',...fields.map(f=>f.label+': '+values[f.id])];
+       if(data.modelo)message.push('Modelo selecionado: '+data.modelo);
+       if(data.cor)message.push('Cor selecionada: '+data.cor);
+       const url='https://wa.me/5511992217592?text='+encodeURIComponent(message.join('\n'));
+       finish.innerHTML='<h2>Finalize sua solicitação de orçamento.</h2><p>Seus dados estão prontos. Abra o WhatsApp e envie a mensagem para a equipe da New Moblly.</p><a class="cta" id="quote-send-whatsapp" href="'+esc(url)+'" target="_blank" rel="noopener noreferrer">ENVIAR PELO WHATSAPP</a><button type="button" class="quote-prev finish-edit">Voltar ao formulário</button>';
+     }
+     flow.hidden=true;finish.hidden=false;finish.classList.add('step-enter');finish.focus({preventScroll:true});window.scrollTo(0,0);
+     finish.querySelector('.finish-back')?.addEventListener('click',close);
+     finish.querySelector('.finish-edit')?.addEventListener('click',()=>{finish.hidden=true;flow.hidden=false;render(false)});
+   }catch(e){err.textContent='Não foi possível confirmar o envio. Tente novamente.'}
+   finally{moving=false;next.disabled=false;if(!flow.hidden)next.textContent='SOLICITAR MEU ORÇAMENTO'}
+ }
+ document.querySelector('#quote-close').addEventListener('click',close);
+ prev.addEventListener('click',()=>{save(false);change(index-1)});
+ form.addEventListener('submit',e=>{e.preventDefault();if(moving||!save())return;index===fields.length-1?submit():change(index+1)});
+ render(false);
+ view.addEventListener('animationend',e=>{if(e.target===view&&e.animationName==='quote-arrival')view.classList.remove('is-entering')});
+ window.addEventListener('pageshow',()=>{view.classList.remove('is-leaving');moving=false;next.disabled=false});
+})();
+</script>
+</body></html>
