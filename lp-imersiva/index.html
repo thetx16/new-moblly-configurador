@@ -112,6 +112,17 @@
 /* V05 — deslocamento vertical do booth, preservando entrada e flutuação */
 .product{top:28px;bottom:-28px}
 @media(max-width:768px){.product{top:16px;bottom:-16px}}
+
+/* V06 — desloca a composição sofá + cards em conjunto, sem alterar a sobreposição */
+.hero-stage{--composition-drop:clamp(70px,7.5vw,110px);height:calc(clamp(390px,39vw,540px) + var(--composition-drop))}
+.product{top:calc(28px + var(--composition-drop));bottom:-28px}
+.watermark{top:clamp(19.5px,1.95vw,27px)}
+@media(max-width:768px){
+  .hero-stage{--composition-drop:clamp(24px,5.5vw,44px);height:calc(clamp(270px,74vw,440px) + var(--composition-drop))}
+  .product{top:calc(16px + var(--composition-drop));bottom:-16px}
+  .watermark{top:0}
+}
+@media(max-width:360px){.hero-stage{height:calc(248px + var(--composition-drop))}}
 </style>
 </head>
 <body>
