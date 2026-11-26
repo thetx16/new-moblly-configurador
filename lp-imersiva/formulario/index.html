@@ -188,7 +188,10 @@ body>main{width:100%;max-width:100%;height:100vh;height:100dvh;overflow:hidden;p
    const allowedColors=['Verde original','Amarelo original','Vermelho original','Bege original','Terracota original','Verde','Caramelo','Vinho','Azul-marinho','Grafite'];
    return {modelo:allowedModels.includes(model)?model:'',cor:allowedColors.includes(color)?color:''};
  }
- function payload(){return {...values,whatsapp:(values.whatsapp||'').replace(/\D/g,''),versao:mode,...selection(),origem:'lp-imersiva'}}
+ function payload(){
+   const attribution={};for(const [k,v] of campaign)if(k!=='form')attribution[k]=v;
+   return {...values,whatsapp:(values.whatsapp||'').replace(/\D/g,''),versao:mode,...selection(),origem:'lp-imersiva',...attribution};
+ }
  async function submit(){
    if(moving)return;moving=true;next.disabled=true;next.textContent='PREPARANDO...';clearError();
    const data=payload(),endpoint=form.dataset.endpoint;
@@ -196,8 +199,11 @@ body>main{width:100%;max-width:100%;height:100vh;height:100dvh;overflow:hidden;p
      if(endpoint){
        const response=await fetch(endpoint,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(data)});
        if(!response.ok)throw Error('Envio não confirmado');
-       finish.innerHTML='<h2>Recebemos sua solicitação de orçamento!</h2><p>Obrigado pelo interesse na New Moblly. Nossa equipe dará continuidade ao atendimento pelo contato informado para conversar sobre os booths para o seu estabelecimento.</p><button type="button" class="quote-prev finish-back">Voltar ao site</button>';
        submitted=true;
+       try{sessionStorage.setItem('nm_quote_confirmed','1')}catch{}
+       const thanksURL='/lp-imersiva/obrigado/'+(campaign.size?'?'+campaign.toString():'');
+       view.classList.add('is-leaving');await sleep(370);location.assign(thanksURL);return;
+
      }else{
        const message=['Olá! Gostaria de solicitar um orçamento de sofás comerciais (booths).','',...fields.map(f=>f.label+': '+values[f.id])];
        if(data.modelo)message.push('Modelo selecionado: '+data.modelo);
