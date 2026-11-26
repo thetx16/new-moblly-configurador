@@ -278,6 +278,14 @@
  .hero-stage .color-swatch>span{width:18px;height:18px}
  .hero-stage .color-swatch::after{inset:6px}
 }
+
+/* V24 — espaçamento vertical mais compacto no seletor mobile */
+@media(max-width:768px){
+ .hero-stage .picker-swatches{gap:0}
+ .hero-stage .color-swatch{height:29px;width:36px;padding:3px}
+ .hero-stage .color-swatch::after{inset:3px auto;width:23px;height:23px;left:50%;transform:translateX(-50%)}
+ .hero-stage .color-swatch[aria-pressed="true"]::after{transform:translateX(-50%) scale(1.08)}
+}
 </style>
 </head>
 <body>
