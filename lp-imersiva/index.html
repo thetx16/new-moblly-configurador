@@ -91,7 +91,7 @@
 @media(prefers-reduced-motion:reduce){.word-a .wave-letter{transform:none;opacity:1}.word-b{display:none}.product-motion{opacity:1;transform:none;filter:none}.glass-card{opacity:1;translate:none}}
 
 /* V04 — produto protagonista e glassmorphism sobreposto */
-.brand{width:130px;height:auto;aspect-ratio:507/324;clip-path:none;margin:0 auto 16px}
+.brand{width:130px;height:auto;aspect-ratio:2434/1556;clip-path:none;margin:0 auto 16px}
 .hero-stage{height:clamp(390px,39vw,540px);z-index:1}
 .product{padding-bottom:0}
 .product-motion{align-items:flex-end}
@@ -596,16 +596,106 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
 /* V38 — finalização exata da onda, inclusive na última linha da página */
 .nm-scroll-reveal.nm-reveal-complete{opacity:1;translate:none}
 .nm-wave-text.nm-reveal-complete .nm-wave-word{opacity:1;transform:none}
+
+/* V39 — official vector brand + cinematic logo draw and expanding SVG mask */
+.brand{aspect-ratio:2434/1556}
+.nm-intro{display:none;position:fixed;inset:0;z-index:99999;overflow:hidden;isolation:isolate;touch-action:none}
+html.nm-intro-active .nm-intro{display:block}
+.nm-intro>svg{display:block;width:100%;height:100%;overflow:hidden;max-width:none}
+.nm-intro-skip{position:absolute;right:max(24px,env(safe-area-inset-right));bottom:max(24px,env(safe-area-inset-bottom));border:1px solid #211f1f26;border-radius:30px;background:#fff;color:#211f1f;font:600 11px/1.4 var(--nm-font);padding:10px 16px;cursor:pointer}
+.nm-intro-skip:focus-visible{outline:2px solid #ff3b32;outline-offset:4px}
+html.nm-intro-hold .hero,html.nm-intro-hold .hero *{animation-play-state:paused!important}
+@media(prefers-reduced-motion:reduce){html.nm-intro-active .nm-intro{display:none}html.nm-intro-hold .hero,html.nm-intro-hold .hero *{animation-play-state:running!important}}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
+<script>
+/* V39: play on first visit, or explicitly with ?intro=1. Never block the page on failure. */
+(()=>{try{
+ const root=document.documentElement,force=new URLSearchParams(location.search).get('intro')==='1';
+ if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+ if(!force&&(location.hash||performance.getEntriesByType('navigation')[0]?.type==='back_forward'||sessionStorage.getItem('nm-intro-v39')==='1'))return;
+ root.classList.add('nm-intro-active','nm-intro-hold');
+ window.nmIntroFailSafe=setTimeout(()=>{root.classList.remove('nm-intro-active','nm-intro-hold');document.dispatchEvent(new Event('nm:intro-reveal'))},4200);
+}catch(e){document.documentElement.classList.remove('nm-intro-active','nm-intro-hold')}})();
+</script>
 </head>
 <body>
+<div class="nm-intro" id="nm-intro"><svg id="nm-intro-canvas" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" viewBox="0 0 1000 1000" preserveAspectRatio="none"><defs><mask id="nm-intro-mask" maskUnits="userSpaceOnUse" maskContentUnits="userSpaceOnUse" x="0" y="0" width="1000" height="1000"><rect id="nm-intro-mask-base" x="0" y="0" width="1000" height="1000" fill="white"/><path id="nm-intro-hole" d="M744 0C812.237 24.371 890.233 49.295 946.897 98.392C1003.56 147.489 1038.89 220.76 1037.62 294.527C1036.36 368.294 998.484 442.557 1002.91 519.16C1007.08 591.256 1048.71 665.424 1108.34 697.088C1164.25 726.773 1235.98 719.102 1304.2 728.948C1386.06 740.763 1483 777.805 1483 860V1235L744 1548L10.7002 1235V318L744 0Z" fill="black" opacity="0"/></mask></defs><rect id="nm-intro-cover" x="0" y="0" width="1000" height="1000" fill="white" mask="url(#nm-intro-mask)"/><g id="nm-intro-mark" opacity="0"><path d="M744 0C812.237 24.371 890.233 49.295 946.897 98.392C1003.56 147.489 1038.89 220.76 1037.62 294.527C1036.36 368.294 998.484 442.557 1002.91 519.16C1007.08 591.256 1048.71 665.424 1108.34 697.088C1164.25 726.773 1235.98 719.102 1304.2 728.948C1386.06 740.763 1483 777.805 1483 860V1235L744 1548L10.7002 1235V318L744 0Z" fill="#FF3B32" pathLength="1" class="nm-intro-path" data-part="0" fill-opacity="0" stroke="#FF3B32" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M1136.3 38C1136.3 18 1164.9 18 1164.9 38C1164.9 44 1168 43 1173 39C1193 24 1216 16 1241 16C1299 16 1346.9 63 1346.9 121V225C1346.9 245 1317.4 245 1317.4 225V121C1317.4 78 1283 45 1241 45C1199 45 1164.9 79 1164.9 101V225C1164.9 245 1136.3 245 1136.3 225V38Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="1" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M1583 212C1562 235 1533 247 1502 247C1438.5 247 1387 195.5 1387 132C1387 68.5 1438.5 16 1502 16C1533 16 1562 28 1583 49C1590 56 1590 62 1583 69L1456 196C1452 200 1453 204 1458 207C1472 214 1487 218 1502 218C1525 218 1546 209 1562 194C1575 181 1596 199 1583 212ZM1438 173L1548 63C1551 60 1549 56 1545 54C1532 48 1517 45 1502 45C1454 45 1415.5 84 1415.5 132C1415.5 147 1419 161 1426 173C1429 179 1433 178 1438 173Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="2" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M1604 40C1600.67 30 1603.33 24 1612 22C1620.67 18.6667 1627 22 1631 32L1684 173C1686 178.333 1688 178.333 1690 173L1744 32C1746.67 25.3333 1752 22 1760 22C1768 22 1773.33 25.3333 1776 32L1829 173C1831 178.333 1833 178.333 1835 173L1888 32C1892 22 1898.33 18.6667 1907 22C1916.33 25.3333 1919 31.6667 1915 41L1846 229C1843.33 236.333 1837.67 240 1829 240C1820.33 240 1814.67 236.333 1812 229L1763 92C1761 86.6667 1759 86.6667 1757 92L1707 229C1704.33 236.333 1698.67 240 1690 240C1681.33 240 1675.67 236.333 1673 229L1604 40Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="3" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M1136 355C1136 335 1164.5 335 1164.5 355C1164.5 359 1167 358 1171 355C1187 341 1208 334 1228 334C1258 334 1287 348 1302 369C1304.67 373 1307.33 373 1310 369C1329 348 1357 334 1385 334C1436 334 1478 376 1478 427V543C1478 563 1449.4 563 1449.4 543V427C1449.4 391 1421 363 1385 363C1349 363 1321.2 391 1321.2 421V543C1321.2 563 1291.9 563 1291.9 543V427C1291.9 391 1264 363 1228 363C1192 363 1164.4 391 1164.4 427V543C1164.4 563 1136 563 1136 543V355Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="4" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M1735.6 449.1C1735.6 512.7 1684.1 564.2 1620.5 564.2C1556.9 564.2 1505.4 512.7 1505.4 449.1C1505.4 385.5 1556.9 334 1620.5 334C1684.1 334 1735.6 385.5 1735.6 449.1ZM1707.1 449C1707.1 401.1 1668.3 362.3 1620.4 362.3C1572.5 362.3 1533.7 401.1 1533.7 449C1533.7 496.9 1572.5 535.7 1620.4 535.7C1668.3 535.7 1707.1 496.9 1707.1 449Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="5" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M1785.9 303C1785.9 283 1815 283 1815 303V355C1815 359.667 1817 360.333 1821 357C1841 342 1866 334 1895 334C1958 334 2009 385 2009 449C2009 513 1958 564 1895 564C1866 564 1841 555 1821 540C1817 536.667 1815 537.333 1815 542C1815 563 1785.9 563 1785.9 543V303ZM1814.4 420V478C1814.4 487 1819 495 1826 503C1843 523 1868 535.5 1895 535.5C1943 535.5 1980 497 1980 449C1980 401 1943 363 1895 363C1868 363 1843 375 1826 395C1819 403 1814.4 411 1814.4 420Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="6" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M2059.5 303C2059.5 299.101 2061.05 295.362 2063.81 292.606C2066.56 289.849 2070.3 288.3 2074.2 288.3C2078.1 288.3 2081.84 289.849 2084.59 292.606C2087.35 295.362 2088.9 299.101 2088.9 303V544C2088.9 547.899 2087.35 551.638 2084.59 554.394C2081.84 557.151 2078.1 558.7 2074.2 558.7C2070.3 558.7 2066.56 557.151 2063.81 554.394C2061.05 551.638 2059.5 547.899 2059.5 544V303Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="7" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M2137.8 303C2137.8 299.101 2139.35 295.362 2142.11 292.606C2144.86 289.849 2148.6 288.3 2152.5 288.3C2156.4 288.3 2160.14 289.849 2162.89 292.606C2165.65 295.362 2167.2 299.101 2167.2 303V544C2167.2 547.899 2165.65 551.638 2162.89 554.394C2160.14 557.151 2156.4 558.7 2152.5 558.7C2148.6 558.7 2144.86 557.151 2142.11 554.394C2139.35 551.638 2137.8 547.899 2137.8 544V303Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="8" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/><path d="M2221.5 355C2221.5 335 2251 335 2251 355V450C2251 493 2285 527 2327 527C2369 527 2404 493 2404 450V355C2404 335 2433.6 335 2433.6 355V548C2433.6 606 2386 653 2328 653C2308 653 2308 624 2328 624C2370 624 2404 590 2404 548V538C2404 534.667 2402.33 534.333 2399 537C2380 549 2354 556 2327 556C2269 556 2221.5 509 2221.5 451V355Z" fill-rule="evenodd" clip-rule="evenodd" fill="black" pathLength="1" class="nm-intro-path" data-part="9" fill-opacity="0" stroke="#000" stroke-width="1.25" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" stroke-dasharray="1 1" stroke-dashoffset="1"/></g><path id="nm-intro-symbol" d="M744 0C812.237 24.371 890.233 49.295 946.897 98.392C1003.56 147.489 1038.89 220.76 1037.62 294.527C1036.36 368.294 998.484 442.557 1002.91 519.16C1007.08 591.256 1048.71 665.424 1108.34 697.088C1164.25 726.773 1235.98 719.102 1304.2 728.948C1386.06 740.763 1483 777.805 1483 860V1235L744 1548L10.7002 1235V318L744 0Z" fill="#FF3B32" opacity="0"/></svg><button type="button" class="nm-intro-skip" id="nm-intro-skip">Pular abertura</button></div>
+<script>
+(() => {
+ const root=document.documentElement,overlay=document.querySelector('#nm-intro');
+ if(!root.classList.contains('nm-intro-active')||!overlay)return;
+ const svg=document.querySelector('#nm-intro-canvas'),mask=document.querySelector('#nm-intro-mask'),base=document.querySelector('#nm-intro-mask-base'),cover=document.querySelector('#nm-intro-cover'),mark=document.querySelector('#nm-intro-mark'),hole=document.querySelector('#nm-intro-hole'),symbol=document.querySelector('#nm-intro-symbol'),skip=document.querySelector('#nm-intro-skip'),paths=[...mark.querySelectorAll('.nm-intro-path')];
+ const reduce=matchMedia('(prefers-reduced-motion: reduce)');
+ const clamp=x=>Math.max(0,Math.min(1,x)),smooth=x=>{x=clamp(x);return x*x*(3-2*x)};
+ let w=1,h=1,s=1,tx=0,ty=0,start=0,raf=0,done=false,revealed=false;
+ function reveal(){
+   if(revealed)return;revealed=true;root.classList.remove('nm-intro-hold');document.dispatchEvent(new Event('nm:intro-reveal'));
+ }
+ function finish(){
+   if(done)return;done=true;cancelAnimationFrame(raf);clearTimeout(window.nmIntroFailSafe);reveal();root.classList.remove('nm-intro-active');overlay.remove();
+   window.removeEventListener('resize',size);document.removeEventListener('keydown',key);reduce.removeEventListener?.('change',onReduced);
+ }
+ function size(){
+   w=overlay.clientWidth||innerWidth;h=overlay.clientHeight||innerHeight;
+   svg.setAttribute('viewBox','0 0 '+w+' '+h);
+   for(const node of [mask,base,cover]){node.setAttribute('width',w);node.setAttribute('height',h)}
+   s=Math.min(390,w*.70,h*.44*2434/1556)/2434;
+   tx=w/2-1217*s;ty=h/2-778*s;
+   mark.setAttribute('transform','translate('+tx+' '+ty+') scale('+s+')');
+ }
+ function key(e){if(e.key==='Escape'){e.preventDefault();finish()}}
+ function onReduced(){if(reduce.matches)finish()}
+ function tick(now){
+   if(done)return;
+   if(!root.classList.contains('nm-intro-active')){finish();return}
+   if(!start)start=now;
+   const t=(now-start)/1000;
+   if(t<1.53){
+     mark.setAttribute('opacity','1');
+     for(let i=0;i<paths.length;i++){
+       const begin=i===0?0:.20+(i-1)*.046,duration=i===0?.78:.52;
+       const draw=smooth((t-begin)/duration);
+       paths[i].setAttribute('stroke-dashoffset',(1-draw).toFixed(4));
+       const fill=smooth((t-1.02-(i===0?0:(i-1)*.018))/.28);
+       paths[i].setAttribute('fill-opacity',fill.toFixed(4));
+       paths[i].setAttribute('stroke-opacity',(1-fill).toFixed(4));
+     }
+   }else{
+     // Match the original symbol position at the first frame, then expand its exact silhouette.
+     const p=clamp((t-1.53)/.99),ease=p*p*(3-2*p);
+     const centerX=tx+744*s,centerY=ty+900*s;
+     const zoom=s*Math.pow(Math.max(w,h)/(260*s),ease);
+     const cx=centerX+(w/2-centerX)*ease,cy=centerY+(h/2-centerY)*ease;
+     const transform='translate('+cx+' '+cy+') scale('+zoom+') translate(-744 -900)';
+     hole.setAttribute('transform',transform);symbol.setAttribute('transform',transform);
+     hole.setAttribute('opacity','1');
+     symbol.setAttribute('opacity',(1-smooth((p-.04)/.28)).toFixed(4));
+     paths[0].setAttribute('opacity','0');
+     mark.setAttribute('opacity',(1-smooth(p/.18)).toFixed(4));
+     skip.style.opacity=String(1-smooth(p/.22));
+     if(p>=.14)reveal();
+     if(p>=.82)cover.setAttribute('opacity',(1-smooth((p-.82)/.18)).toFixed(4));
+     if(p>=1){finish();return}
+   }
+   raf=requestAnimationFrame(tick);
+ }
+ try{
+   sessionStorage.setItem('nm-intro-v39','1');
+ }catch{}
+ try{
+   size();skip.addEventListener('click',finish);overlay.addEventListener('wheel',e=>e.preventDefault(),{passive:false});overlay.addEventListener('touchmove',e=>e.preventDefault(),{passive:false});
+   document.addEventListener('keydown',key);window.addEventListener('resize',size,{passive:true});reduce.addEventListener?.('change',onReduced);window.addEventListener('pagehide',finish,{once:true});
+   raf=requestAnimationFrame(tick);
+ }catch{finish()}
+})();
+</script>
 <main>
 <section class="hero" aria-labelledby="hero-title" id="inicio">
   <div class="hero-container">
     <header class="hero-header">
-      <svg class="brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507 324" role="img" aria-label="New Moblly"><path fill="#FF3A34" d="M153 0L2 66V258L154 322 307 258 308 177C306 158 285 150 261 150H240C217 143 205 122 208 94L215 63C220 30 188 5 153 0Z"/><path fill="#211F1F" fill-rule="evenodd" d="M393,74 404,77 412,87 412,99 410,103 402,110 394,112 385,110 377,102 377,84 385,76ZM336,74 347,77 353,83 356,92 353,103 347,109 338,112 328,110 321,103 318,94 320,84 328,76ZM464,71 463,98 466,105 472,111 482,115 492,114 498,110 501,111 500,120 491,129 482,131 483,135 489,135 501,127 506,117 506,72 501,72 500,101 495,107 489,110 481,110 476,108 468,98 468,73ZM237,72 236,113 238,115 241,114 242,83 250,75 260,75 268,82 270,115 274,114 275,82 283,75 295,76 300,81 302,86 302,114 305,115 307,113 307,87 304,78 298,72 293,70 283,70 278,72 273,77 270,77 265,72 260,70 251,70 243,74 240,71ZM336,69 324,73 317,80 314,86 314,100 317,106 326,114 331,116 342,116 348,114 357,106 360,98 360,88 358,82 350,73ZM446,60 445,113 449,115 450,61ZM430,60 429,113 430,115 433,115 434,61ZM373,60 373,115 376,115 378,111 388,116 399,116 405,114 413,107 417,99 417,87 414,80 408,74 400,70 388,70 378,75 377,62ZM321,10 322,13 297,37 294,32 294,22 296,17 306,9 314,8ZM334,6 349,48 352,49 354,47 363,21 366,17 368,18 378,47 380,49 383,48 398,8 397,5 393,6 385,30 381,36 378,33 368,5 364,5 352,37 349,34 339,6ZM310,3 301,6 293,13 289,21 289,32 294,42 301,48 306,50 318,50 326,46 329,42 325,40 318,45 307,45 304,44 302,40 329,13 329,10 322,5ZM237,5 237,48 241,48 242,17 249,10 255,8 264,9 272,16 274,20 274,46 276,49 279,48 279,20 276,13 269,6 260,3 248,5 243,9 241,5Z"/></svg>
+      <img class="brand" src="/lp-imersiva/assets/logo-vetorial.svg" width="2434" height="1556" alt="New Moblly" decoding="async">
       <p class="hero-tag">SOFÁS COMERCIAIS | BOOTHS</p>
       <h1 id="hero-title">Encontre os booths ideais para o seu estabelecimento!</h1>
     </header>
@@ -662,7 +752,7 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
   <div class="lp-final-art lp-final-photo" data-lp-reveal><img src="/lp-imersiva/assets/portfolio-hq/cta.webp" data-portfolio-src="cta" alt="Ambiente comercial com booths verdes, mesas e cadeiras" width="1000" height="690" loading="lazy" decoding="async" fetchpriority="low"></div>
  </div>
 </section>
-</main><footer class="lp-footer"><div class="lp-wrap lp-footer-inner"><a href="#inicio" aria-label="New Moblly — início"><svg class="brand" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 507 324" role="img" aria-label="New Moblly"><path fill="#FF3A34" d="M153 0L2 66V258L154 322 307 258 308 177C306 158 285 150 261 150H240C217 143 205 122 208 94L215 63C220 30 188 5 153 0Z"/><path fill="#211F1F" fill-rule="evenodd" d="M393,74 404,77 412,87 412,99 410,103 402,110 394,112 385,110 377,102 377,84 385,76ZM336,74 347,77 353,83 356,92 353,103 347,109 338,112 328,110 321,103 318,94 320,84 328,76ZM464,71 463,98 466,105 472,111 482,115 492,114 498,110 501,111 500,120 491,129 482,131 483,135 489,135 501,127 506,117 506,72 501,72 500,101 495,107 489,110 481,110 476,108 468,98 468,73ZM237,72 236,113 238,115 241,114 242,83 250,75 260,75 268,82 270,115 274,114 275,82 283,75 295,76 300,81 302,86 302,114 305,115 307,113 307,87 304,78 298,72 293,70 283,70 278,72 273,77 270,77 265,72 260,70 251,70 243,74 240,71ZM336,69 324,73 317,80 314,86 314,100 317,106 326,114 331,116 342,116 348,114 357,106 360,98 360,88 358,82 350,73ZM446,60 445,113 449,115 450,61ZM430,60 429,113 430,115 433,115 434,61ZM373,60 373,115 376,115 378,111 388,116 399,116 405,114 413,107 417,99 417,87 414,80 408,74 400,70 388,70 378,75 377,62ZM321,10 322,13 297,37 294,32 294,22 296,17 306,9 314,8ZM334,6 349,48 352,49 354,47 363,21 366,17 368,18 378,47 380,49 383,48 398,8 397,5 393,6 385,30 381,36 378,33 368,5 364,5 352,37 349,34 339,6ZM310,3 301,6 293,13 289,21 289,32 294,42 301,48 306,50 318,50 326,46 329,42 325,40 318,45 307,45 304,44 302,40 329,13 329,10 322,5ZM237,5 237,48 241,48 242,17 249,10 255,8 264,9 272,16 274,20 274,46 276,49 279,48 279,20 276,13 269,6 260,3 248,5 243,9 241,5Z"/></svg></a><nav aria-label="Navegação do rodapé"><a href="#modelos">Modelos</a><a href="#projetos">Projetos</a><a href="#avaliacoes">Avaliações</a><a href="/lp-imersiva/formulario/" data-quote-link>Orçamento</a></nav><span>© New Moblly</span></div></footer>
+</main><footer class="lp-footer"><div class="lp-wrap lp-footer-inner"><a href="#inicio" aria-label="New Moblly — início"><img class="brand" src="/lp-imersiva/assets/logo-vetorial.svg" width="2434" height="1556" alt="New Moblly" decoding="async"></a><nav aria-label="Navegação do rodapé"><a href="#modelos">Modelos</a><a href="#projetos">Projetos</a><a href="#avaliacoes">Avaliações</a><a href="/lp-imersiva/formulario/" data-quote-link>Orçamento</a></nav><span>© New Moblly</span></div></footer>
 
 
 <script>
@@ -735,7 +825,7 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
       }
       tn.replaceWith(frag);
     }
-    if(index){node.classList.add('text-wave-ready');observer.observe(node)}
+    if(index){node.classList.add('text-wave-ready');if(document.documentElement.classList.contains('nm-intro-hold'))document.addEventListener('nm:intro-reveal',()=>observer.observe(node),{once:true});else observer.observe(node)}
   }
 })();
 </script>
