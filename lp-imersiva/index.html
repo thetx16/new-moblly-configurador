@@ -545,6 +545,23 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
  .nm-photo-foot{font-size:11px}
 }
 @media(prefers-reduced-motion:reduce){.nm-photo-dialog[open]{animation:none}.lp-photo-expand,.nm-photo-btn{transition:none}}
+
+/* V32 — arco livre até a borda real da seção; progresso discreto */
+.lp-portfolio.lp-pin-ready .lp-portfolio-pin{overflow:hidden}
+.lp-portfolio.lp-pin-ready .lp-arc-stage{overflow:visible;contain:layout;isolation:isolate;z-index:0}
+.lp-portfolio.lp-pin-ready .lp-gallery{overflow:visible}
+.lp-portfolio.lp-pin-ready .lp-heading,.lp-portfolio.lp-pin-ready .lp-gallery-toolbar,.lp-portfolio.lp-pin-ready .lp-scroll-progress,.lp-portfolio.lp-pin-ready .lp-gallery-note,.lp-portfolio.lp-pin-ready .lp-center{position:relative;z-index:3}
+.lp-portfolio.lp-pin-ready .lp-scroll-progress{width:min(220px,58%);margin:6px auto 0;gap:0;pointer-events:none}
+.lp-portfolio.lp-pin-ready .lp-scroll-track{height:2px;border-radius:10px;background:#ffffff38}
+.lp-portfolio.lp-pin-ready .lp-scroll-track>span{background:#ffffffd9}
+.lp-portfolio.lp-pin-ready .lp-scroll-hint{display:none}
+.lp-portfolio.lp-pin-ready .lp-gallery-note{width:max-content;max-width:90%;margin:5px auto 0;text-align:center;font-size:10px;line-height:1.3;opacity:.82;pointer-events:none}
+.lp-portfolio.lp-pin-ready .lp-center{pointer-events:none;margin-top:clamp(9px,1.6vh,17px)}
+.lp-portfolio.lp-pin-ready .lp-portfolio-cta{pointer-events:auto}
+@media(max-width:768px){
+ .lp-portfolio.lp-pin-ready .lp-scroll-progress{width:min(150px,48%);margin-top:5px}
+ .lp-portfolio.lp-pin-ready .lp-gallery-note{font-size:9px;margin-top:4px}
+}
 </style>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/gsap.min.js"></script>
 <script defer src="https://cdn.jsdelivr.net/npm/gsap@3.15.0/dist/ScrollTrigger.min.js"></script>
@@ -929,7 +946,7 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
  const pinMedia=matchMedia('(prefers-reduced-motion:no-preference)');
  const clamp=(v,min,max)=>Math.max(min,Math.min(max,v));
  const cards=[...gallery.querySelectorAll('[data-project]')];
- let active=cards.filter(c=>!c.hidden),pinned=false,travel=0,progress=0,step=24,radius=0,cardSize=0,stageWidth=0,stageHeight=0,start=0,frame=0,resizeTimer=0,measuring=false,lastPaint=-1,tween=null,engine=false,lastWidth=0,lastHeight=0;
+ let active=cards.filter(c=>!c.hidden),pinned=false,travel=0,progress=0,step=24,radius=0,cardSize=0,stageWidth=0,stageHeight=0,stageClipHeight=0,stageTop=0,start=0,frame=0,resizeTimer=0,measuring=false,lastPaint=-1,tween=null,engine=false,lastWidth=0,lastHeight=0;
  const clock={p:0};
  const scrollY=()=>window.scrollY;
  const event=(name,details={})=>{window.dataLayer=window.dataLayer||[];window.dataLayer.push({event:name,...details})};
@@ -951,7 +968,10 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
    for(let i=0;i<active.length;i++){
      const c=active[i],angle=(i-position)*step,rad=angle*Math.PI/180;
      const x=arm*Math.sin(rad),y=arm*(1-Math.cos(rad));
-     const visible=Math.abs(angle)<85&&Math.abs(x)<stageWidth/2+cardSize*.8&&y<stageHeight+cardSize*.25;
+     // Testa o retângulo rotacionado contra a borda externa, não contra a área interna do carrossel.
+     const half=cardSize*.5*(Math.abs(Math.cos(rad))+Math.abs(Math.sin(rad)));
+     const centerY=stageTop+cardSize*.5+y;
+     const visible=Math.abs(angle)<180&&Math.abs(x)-half<stageWidth/2+4&&centerY-half<stageClipHeight+4&&centerY+half> -4;
      const state=visible?'1':'0';
      if(c.dataset.arcVisible!==state){c.dataset.arcVisible=state;c.classList.toggle('arc-visible',visible);c.classList.toggle('arc-culled',!visible)}
      if(visible){c.style.transform='translate3d('+x.toFixed(2)+'px,'+y.toFixed(2)+'px,0) rotate('+angle.toFixed(3)+'deg)';requestImage(c)}
@@ -982,6 +1002,9 @@ window.NM_BOOTH_MODELS = {"capitone":"/lp-imersiva/assets/models-v30/capitone.we
      const vh=window.innerHeight,mobile=window.innerWidth<=768;
      portfolio.style.setProperty('--lp-pin-vh',vh+'px');portfolio.classList.add('lp-pin-ready');
      stageWidth=stage.clientWidth;stageHeight=stage.clientHeight;
+     const pinRect=pin.getBoundingClientRect(),stageRect=stage.getBoundingClientRect();
+     stageClipHeight=pin.clientHeight;
+     stageTop=stageRect.top-pinRect.top+(parseFloat(getComputedStyle(stage).paddingTop)||0);
      cardSize=Math.floor(Math.min(mobile?315:485,stageWidth*(mobile?.82:.46),(stageHeight-24)/(mobile?1.14:1.23)));
      if(cardSize>=150){
        step=mobile?14:24;const separation=cardSize+Math.max(mobile?20:36,cardSize*(mobile?.22:.33));
