@@ -272,6 +272,12 @@
  }
 }
 @media(max-width:360px){.hero-stage .product{--mobile-product-lift:26px}}
+
+/* V23 — seletor de cores visualmente menor apenas no mobile */
+@media(max-width:768px){
+ .hero-stage .color-swatch>span{width:18px;height:18px}
+ .hero-stage .color-swatch::after{inset:6px}
+}
 </style>
 </head>
 <body>
