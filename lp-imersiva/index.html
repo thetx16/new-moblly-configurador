@@ -277,6 +277,24 @@
 .immersive-form button:focus-visible,.immersive-form a:focus-visible{outline:2px solid var(--nm-red);outline-offset:4px}
 @media(max-width:768px){.immersive-form{padding:20px 20px 26px}.quote-logo .brand{width:76px}.quote-close{font-size:11px;padding:8px 12px}.quote-body{padding:34px 0}.quote-heading{font-size:24px}.quote-intro{margin-bottom:24px}.quote-field-label{font-size:clamp(25px,7.8vw,36px);margin-bottom:18px}.quote-step{min-height:160px}.quote-input{min-height:60px;font-size:16px}.quote-next,.quote-prev{min-height:54px}.quote-prev{min-width:84px}.quote-options{gap:8px}.quote-option{font-size:14px}.quote-help{font-size:11px}}
 @media(prefers-reduced-motion:reduce){.hero,.immersive-form,.quote-step{animation:none!important;transition:none!important}}
+
+/* V16 — CTA único, orçamento imersivo com brilho e microinterações */
+.hero .hero-quote-cta{position:relative;isolation:isolate;overflow:hidden;width:min(100%,440px);min-height:64px;padding:16px 24px;gap:14px;border:1px solid #f35850;border-radius:12px;background:linear-gradient(115deg,#bf2422 0%,#df2d27 40%,#ef4138 61%,#b92b27 100%);background-size:250% 100%;background-position:12% 50%;color:#fff;font-size:clamp(12px,1.2vw,14px);font-weight:800;letter-spacing:.025em;box-shadow:0 9px 24px #d82c2630,0 0 0 3px #d82c2609,inset 0 1px 0 #ffffff29;transition:transform .28s cubic-bezier(.22,1,.36,1),box-shadow .35s,background-position .8s ease,border-color .35s;animation:quote-cta-glow 3.5s ease-in-out infinite}
+.hero-quote-cta>*{position:relative;z-index:1}
+.hero-quote-cta>span{flex:1;text-align:center}
+.hero-quote-cta::before{content:"";position:absolute;z-index:0;inset:-50% -75%;background:linear-gradient(110deg,transparent 38%,#fff2 46%,#ffffff48 50%,#fff2 54%,transparent 62%);transform:translateX(-75%);pointer-events:none}
+.hero-quote-cta::after{content:"";position:absolute;z-index:2;inset:0;border-radius:inherit;padding:1.5px;background:linear-gradient(115deg,#ff9a8b,transparent 27%,#ffffffba 48%,transparent 70%,#ff786a);background-size:260% 100%;opacity:.68;pointer-events:none;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;transition:opacity .3s}
+.hero-quote-cta .quote-cta-icon{width:23px;height:23px;animation:quote-icon-motion 3.5s ease-in-out infinite}
+.hero-quote-cta .quote-cta-arrow{display:block;width:20px;height:20px;transition:transform .35s cubic-bezier(.22,1,.36,1)}
+@keyframes quote-cta-glow{0%,100%{box-shadow:0 9px 24px #d82c2630,0 0 0 3px #d82c2609,inset 0 1px 0 #ffffff29}50%{box-shadow:0 12px 30px #d82c2644,0 0 14px #ff3a341c,inset 0 1px 0 #ffffff36}}
+@keyframes quote-icon-motion{0%,74%,100%{transform:none}81%{transform:translateY(-3px) rotate(-5deg)}89%{transform:translateY(0) rotate(3deg)}}
+@keyframes quote-cta-sweep{from{transform:translateX(-75%)}to{transform:translateX(75%)}}
+@keyframes quote-border-flow{from{background-position:0% 50%}to{background-position:200% 50%}}
+@media(hover:hover){.hero .hero-quote-cta:hover{animation:none;background-position:100% 50%;transform:translateY(-3px) scale(1.018);border-color:#ff9e91;box-shadow:0 14px 36px #d82c2655,0 0 17px #ff3a3440,inset 0 1px 0 #ffffff55}.hero-quote-cta:hover::before{animation:quote-cta-sweep .85s ease both}.hero-quote-cta:hover::after{opacity:1;animation:quote-border-flow 1.45s linear infinite}.hero-quote-cta:hover .quote-cta-arrow{transform:translateX(4px)}}
+.hero .hero-quote-cta:active{transform:scale(.98)}
+.hero .hero-quote-cta:focus-visible{outline:2px solid #b92b27;outline-offset:5px}
+@media(max-width:768px){.hero .hero-quote-cta{min-height:59px;padding:14px 17px;gap:9px;max-width:400px}.hero-quote-cta .quote-cta-icon{width:21px;height:21px}.hero-quote-cta .quote-cta-arrow{width:18px;height:18px}}
+@media(prefers-reduced-motion:reduce){.hero .hero-quote-cta,.hero-quote-cta::before,.hero-quote-cta::after,.hero-quote-cta .quote-cta-icon,.hero-quote-cta .quote-cta-arrow{animation:none!important;transition:none!important;transform:none!important}}
 </style>
 </head>
 <body>
@@ -304,9 +322,7 @@
     
     <div class="hero-conversion">
       <p class="hero-description">Conheça os sofás comerciais da New Moblly e explore diferentes modelos, cores e acabamentos para equipar seu restaurante, sorveteria, açaiteria ou doceria.</p>
-      <a class="cta" id="cta-whatsapp" href="#" aria-disabled="true" data-preview="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20.6 11.7a8.6 8.6 0 0 1-12.8 7.5L3 20.5l1.3-4.6A8.6 8.6 0 1 1 20.6 11.7Z"/><path d="M8.7 7.5c-.4-.5-1.1-.3-1.5.3-.9 1.5.6 4.3 2.7 6s4.7 2.3 5.8.9c.3-.4.6-1.2.1-1.5l-2.1-1.1c-.4-.2-.7.1-1 .6-.2.3-.5.4-.8.2a6.5 6.5 0 0 1-2.7-2.7c-.2-.3 0-.6.2-.8.4-.4.5-.7.3-1Z"/></svg><span>SOLICITE SEU ORÇAMENTO PELO WHATSAPP</span><svg class="arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14m-6-6 6 6-6 6"/></svg></a>
-      <a class="secondary" id="cta-form" href="#formulario">Prefiro preencher o formulário</a>
-      <p class="preview-message" id="preview-message" role="status" hidden></p>
+      <a class="cta hero-quote-cta" id="cta-form" href="#formulario"><svg class="quote-cta-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/></svg><span>SOLICITAR MEU ORÇAMENTO</span><svg class="quote-cta-arrow" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12h15m-6-6 6 6-6 6"/></svg></a>
     </div>
   </div>
 </section>
@@ -331,22 +347,7 @@
  <div class="quote-footer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true"><rect x="5" y="10" width="14" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>NEW MOBLLY</div>
 </section>
 </main>
-<script>// Configure a URL oficial e o destino do formulário quando as próximas etapas estiverem prontas.
-const whatsappURL = 'https://wa.me/5511992217592?text='+encodeURIComponent('Olá! Gostaria de solicitar um orçamento de sofás comerciais (booths) para meu estabelecimento.');
-const whatsapp = document.querySelector('#cta-whatsapp');
-const form = document.querySelector('#cta-form');
-if (whatsappURL) { whatsapp.href = whatsappURL; whatsapp.target = '_blank'; whatsapp.rel = 'noopener noreferrer'; whatsapp.removeAttribute('aria-disabled'); delete whatsapp.dataset.preview; }
-for (const link of [whatsapp, form]) {
-  link.addEventListener('click', event => {
-    if (link === form && document.querySelector('#formulario')) return;
-    if (!link.dataset.preview) return;
-    event.preventDefault();
-    const message = document.querySelector('#preview-message');
-    message.textContent = link === whatsapp ? 'O link oficial de WhatsApp será conectado na versão final.' : 'O formulário será integrado na próxima etapa.';
-    message.hidden = false;
-  });
-}
-</script>
+
 
 <script>
 (() => {
