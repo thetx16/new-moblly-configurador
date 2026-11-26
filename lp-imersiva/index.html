@@ -370,6 +370,29 @@ for (const link of [whatsapp, form]) {
   const loaded=new Map(),variants=new Map(),colors=new Map();
   let model='canelado',selected='original',active=0,busy=false,queued=null,desiredModel=model;
   const sleep=ms=>new Promise(r=>setTimeout(r,ms));
+  // V14 — máscara espacial do modelo liso vermelho (referência 1200 × 800).
+  // A área interna do couro é recolorida por inteiro, inclusive sombras e reflexos.
+  // A borda é antialiasada e limitada ao estofamento, sem alcançar madeira ou acabamento preto.
+  function redUpholsteryMask(w,h){
+    const c=document.createElement('canvas');c.width=w;c.height=h;
+    const ctx=c.getContext('2d',{willReadFrequently:true});
+    ctx.scale(w/1200,h/800);
+    ctx.fillStyle='#fff';
+    ctx.beginPath();
+    ctx.moveTo(155,84);
+    ctx.lineTo(1044,84);
+    ctx.quadraticCurveTo(1054,85,1056,96);
+    ctx.lineTo(1060,419);
+    ctx.bezierCurveTo(1080,438,1096,467,1097,485);
+    ctx.quadraticCurveTo(1098,524,1093,550);
+    ctx.lineTo(108,550);
+    ctx.quadraticCurveTo(101,529,103,486);
+    ctx.bezierCurveTo(104,461,119,438,140,419);
+    ctx.lineTo(144,100);
+    ctx.quadraticCurveTo(145,85,155,84);
+    ctx.closePath();ctx.fill();
+    return ctx.getImageData(0,0,w,h).data;
+  }
   function load(id,sourceImage){
     if(loaded.has(id))return Promise.resolve(loaded.get(id));
     return new Promise((resolve,reject)=>{
@@ -379,12 +402,20 @@ for (const link of [whatsapp, form]) {
         const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
         const ctx=canvas.getContext('2d',{willReadFrequently:true});ctx.drawImage(img,0,0);
         const pixels=ctx.getImageData(0,0,w,h),d=pixels.data,mask=new Uint8Array(w*h);let sum=0,count=0;
+        const redShape=models[id].mask==='red'?redUpholsteryMask(w,h):null;
         for(let i=0,p=0;i<d.length;i+=4,p++){
           const y=Math.floor(p/w)/h;if(d[i+3]<5)continue;
           const R=d[i],G=d[i+1],B=d[i+2];let m=0;
           if(models[id].mask==='green'&&y>=.035&&y<=.735)m=smooth(2,12,G-R)*smooth(0,7,G-B);
           if(models[id].mask==='yellow'&&y<.71)m=smooth(14,50,Math.min(R,G)-B)*smooth(-8,12,R-G);
-          if(models[id].mask==='red'&&y>=.099&&y<=.69)m=smooth(10,35,R-G)*smooth(7,30,R-B)*smooth(-9,6,B-G);
+          if(redShape){
+            const geometric=redShape[i+3]/255;
+            // Reforça somente a franja de couro vermelho junto ao contorno.
+            const edgeRed=smooth(5,18,R-G)*smooth(5,18,R-B)*smooth(-5,10,(R-G)*.65-(G-B));
+            const x=(p%w)/w;
+            const edgeBand=x>.079&&x<.92&&y>.103&&y<.688;
+            m=Math.max(geometric,edgeBand?edgeRed:0);
+          }
           if(models[id].mask==='beige'&&y>=.018&&y<=.676)m=smooth(14,45,R)*smooth(2,13,R-B)*smooth(-2,6,R-G);
           mask[p]=Math.round(m*255);
           if(m>.9){sum+=.2126*R+.7152*G+.0722*B;count++}
