@@ -599,6 +599,7 @@ html.nm-photo-lock{overflow:hidden;overscroll-behavior:none}
 
 /* V39 — official vector brand + cinematic logo draw and expanding SVG mask */
 /* V40 — expansão vermelha em tela cheia e revelação de impacto */
+/* V41 — zoom contínuo da marca inteira com revelação atrás das letras e fade em camadas */
 .brand{aspect-ratio:2434/1556}
 .nm-intro{display:none;position:fixed;inset:0;z-index:99999;overflow:hidden;isolation:isolate;touch-action:none}
 html.nm-intro-active .nm-intro{display:block}
@@ -664,49 +665,33 @@ html.nm-intro-hold .hero,html.nm-intro-hold .hero *{animation-play-state:paused!
        paths[i].setAttribute('stroke-opacity',(1-fill).toFixed(4));
      }
    }else{
-     // V40: push the actual red symbol beyond all four edges, then open a second
-     // expanding silhouette through the red field. The full-screen red beat is intentional.
-     const elapsed=t-1.53;
-     const coverZoom=Math.max(w/600,h/500)*1.18;
-     const centerX=tx+744*s,centerY=ty+950*s;
-     paths[0].setAttribute('opacity','0');
-     if(elapsed<.68){
-       const p=clamp(elapsed/.68);
-       const ease=p*p*(3-2*p);
-       const zoom=s*Math.pow(coverZoom/s,ease);
-       const cx=centerX+(w/2-centerX)*ease,cy=centerY+(h/2-centerY)*ease;
-       const transform='translate('+cx+' '+cy+') scale('+zoom+') translate(-744 -950)';
-       cover.setAttribute('fill','white');
-       cover.setAttribute('opacity','1');
-       hole.setAttribute('opacity','0');
-       symbol.setAttribute('transform',transform);
-       symbol.setAttribute('opacity','1');
-       mark.setAttribute('opacity',(1-smooth(p/.32)).toFixed(4));
-       skip.style.opacity=String(1-smooth(p/.55));
-     }else if(elapsed<.78){
-       // At this point the vector silhouette covers the entire viewport.
-       cover.setAttribute('fill','#FF3B32');
-       cover.setAttribute('opacity','1');
-       hole.setAttribute('opacity','0');
-       symbol.setAttribute('opacity','0');
-       mark.setAttribute('opacity','0');
-       skip.style.opacity='0';
-       reveal();
-     }else{
-       const p=clamp((elapsed-.78)/.74);
-       // Start with a small cutout; acceleration carries the brand shape off-screen.
-       const ease=p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
-       const zoom=coverZoom*(.012+1.07*ease);
-       hole.setAttribute('transform','translate('+w/2+' '+h/2+') scale('+zoom+') translate(-744 -950)');
-       hole.setAttribute('opacity','1');
-       cover.setAttribute('fill','#FF3B32');
-       cover.setAttribute('opacity','1');
-       symbol.setAttribute('opacity','0');
-       mark.setAttribute('opacity','0');
-       skip.style.opacity='0';
-       reveal();
-       if(p>=1){finish();return}
+     // V41: one continuous camera push through the complete original logo.
+     // Frame the red symbol at left and oversized black lettering at right,
+     // then crossfade the white plate and the artwork separately over the live hero.
+     const elapsed=t-1.53,p=clamp(elapsed/1.48);
+     const q=clamp(p/.78),ease=q*q*(3-2*q);
+     const finalScale=Math.max(w/1500,h/740);
+     const zoom=s*Math.pow(finalScale/s,ease);
+     // Interpolate the camera anchor in vector coordinates, so the entire mark stays rigid.
+     const startAnchorX=(w*.52-tx)/s,startAnchorY=(h*.24-ty)/s;
+     const anchorX=startAnchorX+(1000-startAnchorX)*ease;
+     const anchorY=startAnchorY+(334-startAnchorY)*ease;
+     const x=w*.52-anchorX*zoom,y=h*.24-anchorY*zoom;
+     mark.setAttribute('transform','translate('+x+' '+y+') scale('+zoom+')');
+     for(const path of paths){
+       path.setAttribute('opacity','1');
+       path.setAttribute('fill-opacity','1');
+       path.setAttribute('stroke-opacity','0');
      }
+     hole.setAttribute('opacity','0');
+     symbol.setAttribute('opacity','0');
+     cover.setAttribute('fill','white');
+     // First reveal the page in the negative space; only then dissolve the giant logo.
+     cover.setAttribute('opacity',(1-smooth((p-.46)/.39)).toFixed(4));
+     mark.setAttribute('opacity',(1-smooth((p-.68)/.32)).toFixed(4));
+     skip.style.opacity=String(1-smooth(p/.27));
+     if(p>=.46)reveal();
+     if(p>=1){finish();return}
    }
    raf=requestAnimationFrame(tick);
  }
